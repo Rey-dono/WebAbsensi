@@ -10,17 +10,6 @@ if (!isset($_SESSION['email'])) {
 $email = $_SESSION['email'];
 
 
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-//     $surat = $_FILES['surat'];
-
-//     $siswa = $conn->query("SELECT * FROM user WHERE email ='$email'");
-
-//     if (mysqli_query($conn, "UPDATE user SET status ='sakit', surat_sakit ='$surat' WHERE email ='$email'")) {
-
-//         header("location: ../selamat/berhasil_absen.php");
-//     }
-// }
 if ( isset($_POST["submit"]) ) {
     $surat = $_FILES['surat'];
 
@@ -30,9 +19,19 @@ if ( isset($_POST["submit"]) ) {
         return false;
     }
 
-    $query = "UPDATE user SET status ='sakit', surat_sakit =$surat WHERE email ='$email'";
+    $query = "UPDATE user SET status ='sakit', surat_sakit ='$surat' WHERE email ='$email'";
 
-    mysqli_query($conn, $query);
+    // mysqli_query($conn, $query);
+
+    if (mysqli_query($conn, $query)) {
+
+        header("location: ../selamat/berhasil_absen.php");
+    }else{
+        echo "<script>
+                    alert('silahkan coba lagi!');
+                    window.location.href='sakit.php';
+            </script>";
+    }
 
     return mysqli_affected_rows($conn);
 }
@@ -57,7 +56,7 @@ function upload() {
         </script>";
     }
     
-    // move_uploaded_file($tmpName, 'img/ ' . $namaFile);
+    move_uploaded_file($tmpName, '../img/surat-sakit/ ' . $namaFile);
 
     return $namaFile;
 }
@@ -167,7 +166,7 @@ function upload() {
                 <span class="icon">✉️</span>
                 <input type="file" placeholder="Enter Reason" name="surat">
             </div>
-            <small class="note">*wajib diisi jika sakit</small>
+            <small class="note">*wajib diisi bila sakit</small>
             <button name="submit" type="submit" class="submit-btn">SUBMIT</button>
         </form>
         <div class="footer-info">
