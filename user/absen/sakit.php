@@ -16,14 +16,14 @@ if (isset($_POST["submit"])) {
         return false; 
     } 
 
-    // Fetch the previous file path from the database
+    // Fetch the previous file from the database
     $result = mysqli_query($conn, "SELECT surat_sakit FROM user WHERE email = '$email'");
     $row = mysqli_fetch_assoc($result);
 
     if ($row && $row['surat_sakit']) {
-        $oldFile = '../img/surat-sakit/' . $row['surat_sakit'];
+        $oldFile = realpath(__DIR__ . '/../img/surat-sakit/' . $row['surat_sakit']); 
         if (file_exists($oldFile)) {
-            unlink($oldFile); // Delete the old file
+            unlink($oldFile); // Delete old file
         }
     }
 
@@ -62,11 +62,15 @@ function upload() {
         return false;
     }      
 
-    $uploadDir = '../img/surat-sakit/';  
-    $uploadPath = $uploadDir . basename($namaFile);
+    // Generate unique file name to avoid conflicts
+    $fileExt = pathinfo($namaFile, PATHINFO_EXTENSION);
+    $newFileName = uniqid() . '.' . $fileExt; 
+
+    $uploadDir = realpath(__DIR__ . '/../img/surat-sakit') . '/'; 
+    $uploadPath = $uploadDir . $newFileName;
 
     if (move_uploaded_file($tmpName, $uploadPath)) {
-        return $namaFile; 
+        return $newFileName; 
     } else {
         echo "<script>
                 alert('Gagal mengupload file!');
