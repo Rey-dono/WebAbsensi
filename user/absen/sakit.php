@@ -1,87 +1,102 @@
-<?php 
-session_start();  
-include '../../all/connection.php';  
+<?php
+session_start();
+include '../../all/connection.php';
 
-if (!isset($_SESSION['email'])) {     
-    header("location: ../../login-done/login71.php"); 
+if (!isset($_SESSION['email'])) {
+    header("location: ../../login-done/login71.php");
     exit;
-}  
+}
 
-$email = $_SESSION['email'];   
+$email = $_SESSION['email'];
 
-if (isset($_POST["submit"])) {     
-    $surat = upload();  
+if (isset($_POST["submit"])) {
+    $surat = upload();
 
-    if (!$surat) { 
-        return false; 
-    } 
+    if (!$surat) {
+        return false;
+    }
 
-    // Fetch the previous file from the database
-    $result = mysqli_query($conn, "SELECT surat_sakit FROM user WHERE email = '$email'");
+    // Fetch previous surat_izin and surat_sakit from the database
+    $result = mysqli_query($conn, "SELECT surat_izin, surat_sakit FROM user WHERE email = '$email'");
     $row = mysqli_fetch_assoc($result);
 
+
     if ($row && $row['surat_sakit']) {
-        $oldFile = realpath(__DIR__ . '/../img/surat-sakit/' . $row['surat_sakit']); 
-        if (file_exists($oldFile)) {
-            unlink($oldFile); // Delete old file
+        $oldSakitFile = realpath(__DIR__ . '/../img/surat-sakit/' . $row['surat_sakit']);
+        if (file_exists($oldSakitFile)) {
+            unlink($oldSakitFile);
         }
     }
 
-    $query = "UPDATE user SET status = 'sakit', surat_sakit = '$surat' WHERE email = '$email'";  
+    if ($row && $row['surat_izin']) {
+        $oldIzinFile = realpath(__DIR__ . '/../img/surat-izin/' . $row['surat_izin']);
+        if (file_exists($oldIzinFile)) {
+            unlink($oldIzinFile);
+        }
+    }
 
-    if (mysqli_query($conn, $query)) {          
-        header("location: ../selamat/berhasil_absen.php"); 
+
+
+
+
+
+
+
+    // Set the new status to "izin", clear surat_sakit, and store the new surat_izin
+    $query = "UPDATE user SET status = 'izin', surat_sakit = '', surat_izin = '$surat' WHERE email = '$email'";
+
+    if (mysqli_query($conn, $query)) {
+        header("location: ../selamat/berhasil_absen.php");
         exit;
-    } else {         
+    } else {
         echo "<script>
                 alert('Silakan coba lagi!');
-                window.location.href='sakit.php';
-              </script>";     
-    } 
-}  
+                window.location.href='izin.php';
+              </script>";
+    }
+}
 
-function upload() {     
-    $namaFile = $_FILES['surat']['name'];     
-    $ukuranFile = $_FILES['surat']['size'];     
-    $error = $_FILES['surat']['error'];     
-    $tmpName = $_FILES['surat']['tmp_name'];      
+function upload()
+{
+    $namaFile = $_FILES['surat']['name'];
+    $ukuranFile = $_FILES['surat']['size'];
+    $error = $_FILES['surat']['error'];
+    $tmpName = $_FILES['surat']['tmp_name'];
 
-    if ($error === 4) {         
+    if ($error === 4) {
         echo "<script>
                 alert('Pilih gambar terlebih dahulu!');
-                window.location.href='sakit.php';
-              </script>";         
-        return false;     
-    } 
+                window.location.href='izin.php';
+              </script>";
+        return false;
+    }
 
-    if ($ukuranFile > 1000000) {         
+    if ($ukuranFile > 1000000) {
         echo "<script>
                 alert('Ukuran gambar terlalu besar!');
-                window.location.href='sakit.php';
-              </script>";         
+                window.location.href='izin.php';
+              </script>";
         return false;
-    }      
+    }
 
-    // Generate unique file name to avoid conflicts
+    // Generate a unique file name to avoid conflicts
     $fileExt = pathinfo($namaFile, PATHINFO_EXTENSION);
-    $newFileName = uniqid() . '.' . $fileExt; 
+    $newFileName = uniqid() . '.' . $fileExt;
 
-    $uploadDir = realpath(__DIR__ . '/../img/surat-sakit') . '/'; 
+    $uploadDir = realpath(__DIR__ . '/../img/surat-sakit') . '/';
     $uploadPath = $uploadDir . $newFileName;
 
     if (move_uploaded_file($tmpName, $uploadPath)) {
-        return $newFileName; 
+        return $newFileName;
     } else {
         echo "<script>
                 alert('Gagal mengupload file!');
-                window.location.href='sakit.php';
-              </script>"; 
+                window.location.href='izin.php';
+              </script>";
         return false;
     }
-}  
+}
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
