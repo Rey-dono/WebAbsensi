@@ -4,150 +4,187 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forgot Password</title>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-       * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
         }
 
-        body {
+        body, html {
+            height: 100%;
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f0f0;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-top: 60px;
-            height: 80vh;
-            background: linear-gradient(to right, #D9D9D9 50%, #5b5558 50%);
         }
 
         .container {
             display: flex;
-            width: 40%;
-            height: 70%;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
             background-color: #fff;
-            border-radius: 20px;
-            margin-left: 100px; /* Geser ke kanan */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
         }
 
+        /* Left Section (Form) */
         .left-section {
-            width: 100%;
-            padding: 40px;
-        }
-
-        .form-container {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        h2 {
-            margin-bottom: 15px;
-            font-size: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .input-container {
-            position: relative; /* Menjaga posisi relatif untuk ikon */
-            margin-bottom: 20px;
-        }
-
-        input[type="email"], input[type="text"] {
-            width: 100%;
-            padding: 10px 40px 10px 40px; /* Tambahkan padding untuk ruang ikon */
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .input-container i {
-            position: absolute;
-            left: 10px; /* Jarak dari kiri */
-            top: 50%;
-            transform: translateY(-50%); /* Memposisikan ikon di tengah vertikal */
-            color: black; /* Warna ikon */
-        }
-
-        .form-container p {
-            font-size: 14px;
-            color: #666;
-            padding-bottom: 12px;
-        }
-
-        .form-container p a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #5b5558;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #4a4547;
-        }
-
-        .image-section {
-            width: 50%;
+            width: 40%;
+            background-color: #f5f5f5;
             display: flex;
             justify-content: center;
             align-items: center;
-            position: relative; /* Tambahkan posisi relatif untuk anak */
+            padding: 40px;
         }
 
-        .image-section img {
-            width: 350px;
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #72ADF0;
+            box-shadow: 0 0 5px rgba(114, 173, 240, 0.5);
+            outline: none;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #72ADF0;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #559ad9;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .form-footer a {
+            color: #72ADF0;
+            text-decoration: none;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Right Section (Image) */
+        .right-section {
+            width: 60%;
+            background-color: #665F63;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .right-section img {
+            max-width: 80%;
             height: auto;
-            margin-left: 350px;
         }
 
-        .school-name {
-            position: absolute; /* Mengatur posisi absolut untuk teks */
-            bottom: 400px; /* Jarak dari atas */
-            right: -300px; /* Jarak dari kanan */
-            color: white; /* Warna teks putih */
-            font-size: 20px; /* Ukuran font */
-            font-weight: bold; /* Tebal */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Bayangan teks untuk efek */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .left-section, .right-section {
+                width: 100%;
+                height: auto;
+                padding: 30px;
+            }
+
+            .right-section img {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h3 {
+                font-size: 20px;
+            }
+
+            .form-group input, .form-group button {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Left Section (Form) -->
         <div class="left-section">
-            <div class="form-container">
-                <h2>Forgot Password</h2>
+            <div class="login-box">
+                <h3>Forgot Password</h3>
                 <form action="#" method="POST">
-                    <div class="input-container">
-                        <i class="fas fa-envelope"></i>
-                        <input type="email" placeholder="Enter email" name="email" required>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
                     </div>
-                    <div class="input-container">
-                        <i class="fas fa-user"></i>
-                        <input type="text" placeholder="Enter username" name="username" required>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
                     </div>
-                    <p>Already Have an Account? <a href="#">Login</a></p>
-                    <button type="submit">Continue</button>
+                    <div class="form-group">
+                        <button type="submit">Continue</button>
+                    </div>
+                    <div class="form-footer">
+                        <p>Already have an account? <a href="#">Login</a></p>
+                    </div>
                 </form>
             </div>
         </div>
-    </div>
-    <div class="right-section">
-        <div class="image-section">
-            <img src="frame 1.png" alt="Illustration">
-            <p class="school-name">SMKN 71 JAKARTA</p> <!-- Tambahkan kelas untuk teks -->
+
+        <!-- Right Section (Image) -->
+        <div class="right-section">
+            <img src="deactivated.png" alt="Illustration">
         </div>
     </div>
 </body>

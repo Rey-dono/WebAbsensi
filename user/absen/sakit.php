@@ -1,68 +1,82 @@
-<?php
-session_start();
+<?php 
+session_start();  
+include '../../all/connection.php';  
 
-include '../../all/connection.php';
+if (!isset($_SESSION['email'])) {     
+    header("location: ../../login-done/login71.php"); 
+    exit;
+}  
 
-if (!isset($_SESSION['email'])) {
-    header("location: ../../login-done/login71.php");
-}
+$email = $_SESSION['email'];   
 
-$email = $_SESSION['email'];
+if (isset($_POST["submit"])) {     
+    $surat = upload();  
 
+    if (!$surat) { 
+        return false; 
+    } 
 
-if ( isset($_POST["submit"]) ) {
-    $surat = $_FILES['surat'];
+    // Fetch the previous file path from the database
+    $result = mysqli_query($conn, "SELECT surat_sakit FROM user WHERE email = '$email'");
+    $row = mysqli_fetch_assoc($result);
 
-    $surat = upload();
+    if ($row && $row['surat_sakit']) {
+        $oldFile = '../img/surat-sakit/' . $row['surat_sakit'];
+        if (file_exists($oldFile)) {
+            unlink($oldFile); // Delete the old file
+        }
+    }
 
-    if ( !$surat){
+    $query = "UPDATE user SET status = 'sakit', surat_sakit = '$surat' WHERE email = '$email'";  
+
+    if (mysqli_query($conn, $query)) {          
+        header("location: ../selamat/berhasil_absen.php"); 
+        exit;
+    } else {         
+        echo "<script>
+                alert('Silakan coba lagi!');
+                window.location.href='sakit.php';
+              </script>";     
+    } 
+}  
+
+function upload() {     
+    $namaFile = $_FILES['surat']['name'];     
+    $ukuranFile = $_FILES['surat']['size'];     
+    $error = $_FILES['surat']['error'];     
+    $tmpName = $_FILES['surat']['tmp_name'];      
+
+    if ($error === 4) {         
+        echo "<script>
+                alert('Pilih gambar terlebih dahulu!');
+                window.location.href='sakit.php';
+              </script>";         
+        return false;     
+    } 
+
+    if ($ukuranFile > 1000000) {         
+        echo "<script>
+                alert('Ukuran gambar terlalu besar!');
+                window.location.href='sakit.php';
+              </script>";         
+        return false;
+    }      
+
+    $uploadDir = '../img/surat-sakit/';  
+    $uploadPath = $uploadDir . basename($namaFile);
+
+    if (move_uploaded_file($tmpName, $uploadPath)) {
+        return $namaFile; 
+    } else {
+        echo "<script>
+                alert('Gagal mengupload file!');
+                window.location.href='sakit.php';
+              </script>"; 
         return false;
     }
-
-    $query = "UPDATE user SET status ='sakit', surat_sakit ='$surat' WHERE email ='$email'";
-
-    // mysqli_query($conn, $query);
-
-    if (mysqli_query($conn, $query)) {
-
-        header("location: ../selamat/berhasil_absen.php");
-    }else{
-        echo "<script>
-                    alert('silahkan coba lagi!');
-                    window.location.href='sakit.php';
-            </script>";
-    }
-
-    return mysqli_affected_rows($conn);
-}
-
-function upload() {
-    $namaFile = $_FILES['surat']['name'];
-    $ukuranFile = $_FILES['surat']['size'];
-    $error = $_FILES['surat']['error'];
-    $tmpName = $_FILES['surat']['tmp_name'];
-
-    if ( $error === 4) {
-        echo "<script>
-                    alert('pilih gambar terlebih dahulu!');
-                    window.location.href='sakit.php';
-            </script>";
-            return false;
-    }
-    if ( $ukuranFile > 1000000) {
-        echo "<script>
-            alert('ukuran gambar terlalu besar!');
-            window.location.href='sakit.php';
-        </script>";
-    }
-    
-    move_uploaded_file($tmpName, '../img/surat-sakit/ ' . $namaFile);
-
-    return $namaFile;
-}
-
-
+}  
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
