@@ -153,7 +153,7 @@ while ($row = $banyak_siswa->fetch_row()) {
             <a href="hadir.php">
                 <div class="status hadir">Hadir</div>
             </a>
-            <a href="">
+            <a href="izin.php">
                 <div class="status izin">Izin</div>
             </a>
             <a href="sakit.php">
