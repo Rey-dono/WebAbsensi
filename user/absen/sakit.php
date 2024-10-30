@@ -27,7 +27,7 @@ if (isset($_POST["submit"])) {
         }
     }
 
-    $query = "UPDATE user SET status = 'sakit', surat_sakit = '$surat' WHERE email = '$email'";  
+    $query = "UPDATE user SET status = 'sakit', surat_izin = '',surat_sakit = '$surat' WHERE email = '$email'";  
 
     if (mysqli_query($conn, $query)) {          
         header("location: ../selamat/berhasil_absen.php"); 
