@@ -15,39 +15,18 @@ if (isset($_POST["submit"])) {
     if (!$surat) {
         return false;
     }
+    
 
-    // Fetch previous surat_izin and surat_sakit from the database
-    $result = mysqli_query($conn, "SELECT surat_izin, surat_sakit FROM user WHERE email = '$email'");
-    $row = mysqli_fetch_assoc($result);
-
-
-    if ($row && $row['surat_sakit']) {
-        $oldSakitFile = realpath(__DIR__ . '/../img/surat-sakit/' . $row['surat_sakit']);
-        if (file_exists($oldSakitFile)) {
-            unlink($oldSakitFile);
-        }
-    }
-
-    if ($row && $row['surat_izin']) {
-        $oldIzinFile = realpath(__DIR__ . '/../img/surat-izin/' . $row['surat_izin']);
-        if (file_exists($oldIzinFile)) {
-            unlink($oldIzinFile);
-        }
-    }
-
-
-
-
-
-
-
-
-    // Set the new status to "izin", clear surat_sakit, and store the new surat_izin
-    $query = "UPDATE user SET status = 'izin', surat_sakit = '', surat_izin = '$surat' WHERE email = '$email'";
+    $query = "INSERT INTO history (id, nis, status, waktu)
+    SELECT id, nis, status, waktu
+    FROM user WHERE email = '$email'";
 
     if (mysqli_query($conn, $query)) {
+    if (mysqli_query($conn, "UPDATE user SET status ='sakit', surat_sakit = '$surat',surat_izin='' WHERE email = '$email'")) {
         header("location: ../selamat/berhasil_absen.php");
-        exit;
+    }
+    
+
     } else {
         echo "<script>
                 alert('Silakan coba lagi!');

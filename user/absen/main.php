@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 include '../../all/connection.php';
 
 if (!isset($_SESSION['email'])) {
@@ -9,20 +8,35 @@ if (!isset($_SESSION['email'])) {
 
 $email = $_SESSION['email'];
 
+// Fetch user data based on email
 $banyak_siswa = $conn->query("SELECT * FROM user WHERE email = '$email'");
 
-while ($row = $banyak_siswa->fetch_row()) {
-    $siswa[] = $row;
+// Store user data in an array
+$siswa = [];
+if ($row = $banyak_siswa->fetch_assoc()) {
+    $siswa = $row; // Store the first (and expected only) result
 }
 
-// if(true) {
-//     $i = 0;
-//     while(true) {
-//         echo "$i";
-//         $i++;
-//     }
-// }
+// Fetch history data with join, sorted by the most recent 'waktu'
+$sql = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu
+        FROM history
+        JOIN user ON history.nis = user.nis 
+        WHERE user.email = '$email'
+        ORDER BY history.waktu DESC"; // Order by 'waktu' in descending order
 
+$result = $conn->query($sql);
+
+// Store history data in an array
+$history_data = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $history_data[] = $row;
+    }
+} else {
+    echo "0 results";
+}
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -58,12 +72,12 @@ while ($row = $banyak_siswa->fetch_row()) {
             padding: 30px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             text-align: center;
-            width: 1890px;
-            height: 925px;
+            width: 80%; /* Adjusted for better responsiveness */
+            max-width: 1200px; /* Maximum width */
         }
 
         /* Judul */
-        h2 {
+        h1 {
             margin-bottom: 20px;
             color: #000;
         }
@@ -72,8 +86,8 @@ while ($row = $banyak_siswa->fetch_row()) {
         .status-container {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 130px;
-            margin-top: 150px;
+            margin-bottom: 30px;
+            margin-top: 20px;
         }
 
         .status {
@@ -98,7 +112,6 @@ while ($row = $banyak_siswa->fetch_row()) {
 
         .izin {
             background-color: #f1c40f;
-            /* color: #000; */
             width: 350px;
             height: 350px;
         }
@@ -115,32 +128,31 @@ while ($row = $banyak_siswa->fetch_row()) {
             display: inline-block;
             margin: auto;
             padding: 10px;
-            padding-right: 100px;
-            padding-left: 100px;
-            /* width: 1600px; */
             border-radius: 10px;
             color: #fff;
             font-size: 2rem;
+            width: 100%; /* Make the table responsive */
         }
+
         .schedule table {
             border-collapse: collapse;
-            border-color: gray; 
-            
+            width: 100%; /* Full width for the table */
         }
-        .schedule td{
+
+        .schedule th, .schedule td {
+            border: 1px solid gray; /* Border for the cells */
             padding: 20px;
+            text-align: center; /* Center align for better readability */
         }
-        .schedule th {
-            text-align: center;
-            font-weight: bold;
-            height: 80px;
-            padding: 20px;
+
+        /* Styles for the student data table */
+        .student-table {
+            margin-top: 20px;
+            width: 100%; /* Full width for the table */
         }
-        .center {
-            text-align: center;
-        }
-        .left {
-            text-align: left;
+
+        .student-table th {
+            background-color: darkgreen; /* Light gray background for header */
         }
     </style>
 </head>
@@ -162,28 +174,30 @@ while ($row = $banyak_siswa->fetch_row()) {
         </div>
 
         <div class="schedule">
-            <p>Welcome..</p>
-            <?php foreach ($banyak_siswa as $siswa) : ?>
-                <table border="1">
-                <tr>
-                    <th>NIS</th>
-                    <th>Nama</th>
-                    <th>Kelas</th>
-                    <th>Status</th>
-                </tr>
-                <tr>
-                    <td class="center"><?= $siswa['nis'] ?></td>
-                    <td class="left"><?= $siswa['nama'] ?></td>
-                    <td class="center"><?= $siswa['kelas'] ?></td>
-                    <td class="center"><?= $siswa['status'] ?></td>
-                </tr>
-                </table>
-            <?php endforeach; ?>
-            
+            <p>Welcome, <?= htmlspecialchars($siswa['nama']); ?>..</p> <!-- Personalized welcome message -->
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>NIS</th>
+                        <th>Nama</th>
+                        <th>Kelas</th>
+                        <th>Status</th>
+                        <th>Waktu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($history_data as $data): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($data['nis']) ?></td>
+                        <td><?= htmlspecialchars($data['nama']) ?></td>
+                        <td><?= htmlspecialchars($data['kelas']) ?></td>
+                        <td><?= htmlspecialchars($data['status']) ?></td>
+                        <td><?= htmlspecialchars($data['waktu']) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </body>
-
-
-
 </html>
