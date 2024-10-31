@@ -10,7 +10,9 @@ $email = $_SESSION['email'];
 
 $siswa = $conn->query("SELECT * FROM user WHERE email ='$email'");
 
-if (mysqli_query($conn, "UPDATE user SET status ='hadir' WHERE email = '$email'")) {
-
-    header("location: ../selamat/berhasil_absen.php");
+if (mysqli_query($conn, "UPDATE user SET status ='hadir', surat_sakit='', surat_izin='' WHERE email = '$email'")) {
+    if (mysqli_query($conn, "INSERT INTO history ")) {
+        header("location: ../selamat/berhasil_absen.php");
+    }
+    
 }
