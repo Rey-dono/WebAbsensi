@@ -10,20 +10,23 @@ $email = $_SESSION['email'];
 
 // Fetch user data based on email
 $banyak_siswa = $conn->query("SELECT * FROM user WHERE email = '$email'");
-
-// Store user data in an array
 $siswa = [];
 if ($row = $banyak_siswa->fetch_assoc()) {
-    $siswa = $row; // Store the first (and expected only) result
+    $siswa = $row;
 }
 
-// Fetch history data with join, sorted by the most recent 'waktu'
+// Set pagination variables
+$records_per_page = 4; // Maximum records per page set to 4
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Current page number
+$offset = ($page - 1) * $records_per_page; // Calculate offset
+
+// Fetch history data with pagination and sorting by 'waktu'
 $sql = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu
         FROM history
         JOIN user ON history.nis = user.nis 
         WHERE user.email = '$email'
-        ORDER BY history.waktu DESC"; // Order by 'waktu' in descending order
-
+        ORDER BY history.waktu DESC
+        LIMIT $offset, $records_per_page";
 $result = $conn->query($sql);
 
 // Store history data in an array
@@ -32,12 +35,19 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $history_data[] = $row;
     }
-} else {
-    echo "0 results";
 }
+
+// Get the total number of records for pagination
+$total_records_query = "SELECT COUNT(*) AS total FROM history
+                        JOIN user ON history.nis = user.nis 
+                        WHERE user.email = '$email'";
+$total_records_result = $conn->query($total_records_query);
+$total_records = $total_records_result->fetch_assoc()['total'];
+$total_pages = ceil($total_records / $records_per_page);
 
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +57,6 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presensi Kehadiran</title>
     <style>
-        /* Reset dasar */
         * {
             margin: 0;
             padding: 0;
@@ -67,6 +76,7 @@ $conn->close();
 
         /* Container utama */
         .container {
+            margin-top: 100px;
             background-color: #f9f9f9;
             border-radius: 15px;
             padding: 30px;
@@ -154,6 +164,49 @@ $conn->close();
         .student-table th {
             background-color: darkgreen; /* Light gray background for header */
         }
+
+        /* Pagination container */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Pagination links */
+.pagination a {
+    color: #2d5d34; /* Dark green text */
+    padding: 10px 15px;
+    margin: 0 5px;
+    text-decoration: none;
+    font-weight: bold;
+    border: 1px solid #2d5d34; /* Dark green border */
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover effect for pagination links */
+.pagination a:hover {
+    background-color: #2d5d34; /* Dark green background on hover */
+    color: #fff; /* White text */
+    border-color: #2d5d34;
+}
+
+/* Active page link */
+.pagination a.active {
+    background-color: #2d5d34; /* Darker green for active page */
+    color: #fff;
+    border-color: #2d5d34;
+}
+
+/* Disabled pagination link */
+.pagination a.disabled {
+    pointer-events: none;
+    color: #999; /* Lighter color for disabled state */
+    border-color: #999; /* Lighter border */
+    background-color: #f0f0f0; /* Light background */
+}
+
+
     </style>
 </head>
 
@@ -174,7 +227,7 @@ $conn->close();
         </div>
 
         <div class="schedule">
-            <p>Welcome, <?= htmlspecialchars($siswa['nama']); ?>..</p> <!-- Personalized welcome message -->
+            <p>Welcome, <?= htmlspecialchars($siswa['nama']); ?>..</p>
             <table class="student-table">
                 <thead>
                     <tr>
@@ -197,6 +250,22 @@ $conn->close();
                     <?php endforeach; ?>
                 </tbody>
             </table>
+
+            <!-- Pagination links -->
+            <!-- Pagination links -->
+<div class="pagination">
+    <!-- Previous Button -->
+    <a href="?page=<?= $page - 1 ?>" class="<?= $page <= 1 ? 'disabled' : '' ?>">Previous</a>
+
+    <!-- Page Number Links -->
+    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+        <a href="?page=<?= $i ?>" <?= $i === $page ? 'class="active"' : '' ?>><?= $i ?></a>
+    <?php endfor; ?>
+
+    <!-- Next Button -->
+    <a href="?page=<?= $page + 1 ?>" class="<?= $page >= $total_pages ? 'disabled' : '' ?>">Next</a>
+</div>
+
         </div>
     </div>
 </body>
