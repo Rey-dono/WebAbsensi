@@ -16,26 +16,43 @@ if ($row = $banyak_admin->fetch_assoc()) {
     $admin = $row;
 }
 
-// Proses submit data form
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_POST['submit'])) {
     $nis = $_POST['nis'];
     $nama = $_POST['nama'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
     $kelas = $_POST['kelas'];
-    $email_siswa = $_POST['email_siswa'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-    // Insert data ke dalam tabel siswa
-    $stmt = $conn->prepare("INSERT INTO siswa (nis, nama, kelas, email, password) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("issss", $nis, $nama, $kelas, $email_siswa, $password);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Data berhasil ditambahkan!'); window.location.href='';</script>";
-    } else {
-        echo "<script>alert('Gagal menambahkan data');</script>";
-    }
-    $stmt->close();
+    
+        $sql = "SELECT * FROM user WHERE email='$email'";
+        $result = mysqli_query($conn, $sql);
+        if (!$result->num_rows > 0) {
+            $sql = "INSERT INTO user (nis, nama, kelas, email, password)
+                    VALUES ('$nis', '$nama', '$kelas', '$email', '$password')";
+            $result = mysqli_query($conn, $sql);
+            if ($result) {
+                // mengkosongkan value setelah berhasil insert data
+                $nis = "";
+                $nama = "";
+                $kelas= "";
+                $email= "";
+                $_POST['password'] = "";
+                
+                echo "<script>
+                alert('Selamat, registrasi berhasil!');
+                window.location.href = 'datasiswa.php';
+              </script>";
+    
+                exit();
+            } else {
+                echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
+            }
+        } else {
+            echo "<script>alert('Woops! Email Sudah Terdaftar.')</script>";
+        }
 }
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -260,7 +277,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-group">
                     <label for="email_siswa">Email</label>
-                    <input type="email" name="email_siswa" id="email_siswa" required>
+                    <input type="email" name="email" id="email" required>
                 </div>
 
                 <div class="form-group">
@@ -268,7 +285,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" name="password" id="password" required>
                 </div>
 
-                <button type="submit" class="submit-btn">Submit</button>
+                <button type="submit" class="submit-btn" name="submit">Submit</button>
             </form>
         </div>
     </div>
