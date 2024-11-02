@@ -143,7 +143,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
         <h2>Admin : <?= htmlspecialchars($admin['nama']); ?></h2>
         <ul>
             <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="#"><i class="fas fa-user-check"></i> Absensi Siswa</a></li>
+            <li><a href="datasiswa.php"><i class="fas fa-user-check"></i> Data Siswa</a></li>
             <li><a href="#"><i class="fas fa-user-cog"></i> Manajemen Admin</a></li>
             <li><a href="#"><i class="fas fa-history"></i> Riwayat Absen</a></li>
             <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
