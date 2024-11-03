@@ -16,43 +16,31 @@ if ($row = $banyak_admin->fetch_assoc()) {
     $admin = $row;
 }
 
+// Handle form submission
 if (isset($_POST['submit'])) {
     $nis = $_POST['nis'];
     $nama = $_POST['nama'];
-    $email = $_POST['email'];
+    $email_siswa = $_POST['email'];
     $password = $_POST['password'];
     $kelas = $_POST['kelas'];
-    
-        $sql = "SELECT * FROM user WHERE email='$email'";
-        $result = mysqli_query($conn, $sql);
-        if (!$result->num_rows > 0) {
-            $sql = "INSERT INTO user (nis, nama, kelas, email, password)
-                    VALUES ('$nis', '$nama', '$kelas', '$email', '$password')";
-            $result = mysqli_query($conn, $sql);
-            if ($result) {
-                // mengkosongkan value setelah berhasil insert data
-                $nis = "";
-                $nama = "";
-                $kelas= "";
-                $email= "";
-                $_POST['password'] = "";
-                
-                echo "<script>
-                alert('Selamat, registrasi berhasil!');
-                window.location.href = 'datasiswa.php';
-              </script>";
-    
-                exit();
-            } else {
-                echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
-            }
+
+    // Check if email already exists
+    $sql = "SELECT * FROM user WHERE email='$email_siswa'";
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows === 0) {
+        // Insert new student data
+        $sql = "INSERT INTO user (nis, nama, kelas, email, password) VALUES ('$nis', '$nama', '$kelas', '$email_siswa', '$password')";
+        if ($conn->query($sql)) {
+            echo "<script>alert('Selamat, registrasi berhasil!');</script>";
         } else {
-            echo "<script>alert('Woops! Email Sudah Terdaftar.')</script>";
+            echo "<script>alert('Woops! Terjadi kesalahan.');</script>";
         }
+    } else {
+        echo "<script>alert('Woops! Email sudah terdaftar.');</script>";
+    }
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -126,7 +114,10 @@ if (isset($_POST['submit'])) {
         .main-content {
             margin-left: 250px;
             padding: 20px;
-            width: 100%;
+            width: calc(100% - 250px);
+            display: flex;
+            flex-direction: column; /* Stack the header vertically */
+            gap: 20px; /* Add spacing between elements */
         }
 
         .header {
@@ -135,33 +126,44 @@ if (isset($_POST['submit'])) {
             padding: 30px;
             border-radius: 8px;
             text-align: center;
-            margin-bottom: 20px;
         }
 
-        .info-boxes {
+        /* Flex container for table and form */
+        .content-wrapper {
             display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            margin-top: 20px;
+            gap: 20px; /* Space between table and form */
         }
 
-        .info-box {
-            background-color: #3498DB;
-            color: #fff;
-            width: 30%;
+        /* Table container styling */
+        .table-container {
+            background-color: #fff;
             padding: 20px;
             border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            flex: 1; /* Allow the table to take available space */
+        }
+
+        .table-container h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
             text-align: center;
         }
 
-        .info-box h2 {
-            font-size: 18px;
-            margin-bottom: 10px;
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .info-box .icon {
-            font-size: 50px;
-            margin-bottom: 15px;
+        .data-table th, .data-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .data-table th {
+            background-color: #3498DB;
+            color: #fff;
         }
 
         /* Form container styling */
@@ -171,9 +173,6 @@ if (isset($_POST['submit'])) {
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             width: 300px;
-            position: absolute;
-            top: 160px;
-            right: 20px;
         }
 
         .form-container h2 {
@@ -215,16 +214,48 @@ if (isset($_POST['submit'])) {
         .submit-btn:hover {
             background-color: #3498DB;
         }
+        .edit-btn, .delete-btn {
+        color: #2980B9;
+        margin-right: 10px;
+        text-decoration: none;
+    }
+
+    .edit-btn:hover {
+        color: #3498DB;
+    }
+
+    .delete-btn {
+        color: #e74c3c;
+    }
+
+    .delete-btn:hover {
+        color: #c0392b;
+    }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#kelas-select').change(function() {
+                var selectedKelas = $(this).val();
+                $.ajax({
+                    url: 'fetch-siswa.php', // URL to the PHP file that fetches students
+                    type: 'POST',
+                    data: {kelas: selectedKelas},
+                    success: function(data) {
+                        $('#student-table-body').html(data);
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 
-    <!-- Sidebar -->
     <div class="sidebar">
         <img src="logo.png" alt="Admin">
         <h2>Admin : <?= htmlspecialchars($admin['nama']); ?></h2>
         <ul>
-            <li><a href=""><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="admin.php"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="#"><i class="fas fa-user-check"></i> Data Siswa</a></li>
             <li><a href="#"><i class="fas fa-user-cog"></i> Manajemen Admin</a></li>
             <li><a href="#"><i class="fas fa-history"></i> Riwayat Absen</a></li>
@@ -232,61 +263,99 @@ if (isset($_POST['submit'])) {
         </ul>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
-        <!-- Header / Welcome Message -->
         <div class="header">
             <h1>Data Siswa SMKN 71 Jakarta</h1>
             <p>Dashboard for managing student attendance and admin settings</p>
         </div>
 
-        <!-- Form Container -->
-        <div class="form-container">
-            <h2>Tambah Data Siswa</h2>
-            <form method="POST" action="">
-                <div class="form-group">
-                    <label for="nis">NIS</label>
-                    <input type="number" name="nis" id="nis" required>
-                </div>
+        <div class="content-wrapper">
+            <div class="table-container">
+                <h2>Data Siswa</h2>
+                <select id="kelas-select">
+                    <option value="">Select Kelas</option>
+                    <option value="X RPL 1">X RPL 1</option>
+                    <option value="X RPL 2">X RPL 2</option>
+                    <option value="X DKV 1">X DKV 1</option>
+                    <option value="X DKV 2">X DKV 2</option>
+                    <option value="X ANM 1">X ANM 1</option>
+                    <option value="X ANM 2">X ANM 2</option>
+                    <option value="XI RPL 1">XI RPL 1</option>
+                    <option value="XI RPL 2">XI RPL 2</option>
+                    <option value="XI DKV 1">XI DKV 1</option>
+                    <option value="XI DKV 2">XI DKV 2</option>
+                    <option value="XI ANM 1">XI ANM 1</option>
+                    <option value="XI ANM 2">XI ANM 2</option>
+                    <option value="XII RPL">XII RPL</option>
+                    <option value="XII DKV">XII DKV</option>
+                    <option value="XII ANM">XII ANM</option>
+                </select>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>NIS</th>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-table-body">
+                        <!-- Student data will be injected here via AJAX -->
+                    </tbody>
+                </table>
+            </div>
 
-                <div class="form-group">
-                    <label for="nama">Nama</label>
-                    <input type="text" name="nama" id="nama" required>
-                </div>
+            <div class="form-container">
+                <h2>Tambah Data Siswa</h2>
+                <form method="POST" action="">
+                    <div class="form-group">
+                        <label for="nis">NIS</label>
+                        <input type="number" name="nis" id="nis" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="kelas">Kelas</label>
-                    <select name="kelas" id="kelas" required>
-                        <option value="X RPL 1">X RPL 1</option>
-                        <option value="X RPL 2">X RPL 2</option>
-                        <option value="X DKV 1">X DKV 1</option>
-                        <option value="X DKV 2">X DKV 2</option>
-                        <option value="X ANM 1">X ANM 1</option>
-                        <option value="X ANM 2">X ANM 2</option>
-                        <option value="XI RPL 1">XI RPL 1</option>
-                        <option value="XI RPL 2">XI RPL 2</option>
-                        <option value="XI DKV 1">XI DKV 1</option>
-                        <option value="XI DKV 2">XI DKV 1</option>
-                        <option value="XI ANM 1">XI ANM 2</option>
-                        <option value="XI ANM 2">XI ANM 1</option>
-                        <option value="XII RPL ">XII RPL </option>
-                        <option value="XII DKV ">XII DKV </option>
-                        <option value="XII ANM ">XII ANM </option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="nama">Nama</label>
+                        <input type="text" name="nama" id="nama" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="email_siswa">Email</label>
-                    <input type="email" name="email" id="email" required>
-                </div>
+                    <div class="form-group">
+                        <label for="kelas">Kelas</label>
+                        <select name="kelas" id="kelas" required>
+                            <option value="X RPL 1">X RPL 1</option>
+                            <option value="X RPL 2">X RPL 2</option>
+                            <option value="X DKV 1">X DKV 1</option>
+                            <option value="X DKV 2">X DKV 2</option>
+                            <option value="X ANM 1">X ANM 1</option>
+                            <option value="X ANM 2">X ANM 2</option>
+                            <option value="XI RPL 1">XI RPL 1</option>
+                            <option value="XI RPL 2">XI RPL 2</option>
+                            <option value="XI DKV 1">XI DKV 1</option>
+                            <option value="XI DKV 2">XI DKV 2</option>
+                            <option value="XI ANM 1">XI ANM 1</option>
+                            <option value="XI ANM 2">XI ANM 2</option>
+                            <option value="XII RPL">XII RPL</option>
+                            <option value="XII DKV">XII DKV</option>
+                            <option value="XII ANM">XII ANM</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" name="password" id="password" required>
-                </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" required>
+                    </div>
 
-                <button type="submit" class="submit-btn" name="submit">Submit</button>
-            </form>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn" name="submit">Submit</button>
+                    <!-- Edit Student Modal -->
+
+
+                </form>
+            </div>
         </div>
     </div>
 

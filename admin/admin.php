@@ -177,6 +177,19 @@ if ($row = $banyak_admin->fetch_assoc()) {
             </div>
         </div>
     </div>
+    <script>
+        let idleTime = 0;
 
+        function resetIdleTime  (){
+            idleTime = 0;
+        }
+        setInterval(function() {
+            idleTime++; 
+            if(idleTime>=20){
+                window.location.href='../admin/logout.php';
+            }
+            
+        }, 1000);
+    </script>
 </body>
 </html>

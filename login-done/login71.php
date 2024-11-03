@@ -406,7 +406,7 @@ if(isset($_POST['submit'])){
                         <label for="remember-me">
                             <input type="checkbox" id="remember-me"> Remember me
                         </label>
-                        <a href="rset.php">Forgot Password?</a>
+                        <a href="../forgot-pass-done/forgot.php">Forgot Password?</a>
                     </div>
                     <div class="buttons">
                         <button type="submit" name="submit" class="login-btn">LOGIN</button>                        
