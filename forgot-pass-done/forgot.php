@@ -1,6 +1,6 @@
 <?php
 // update_password.php
-include 'connection.php'; // Menghubungkan file db.php
+include 'C:\xampp\htdocs\WebAbsensi\all\connection.php'; // Menghubungkan file db.php
 
 $message = ""; // Variabel untuk menyimpan pesan
 
@@ -29,7 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt = $conn->prepare("UPDATE user SET password = ? WHERE email = ? AND nama = ?");
             $stmt->bind_param("sss", $new_password, $email, $nama);
             if ($stmt->execute()) {
-                
+                // Mengarahkan ke halaman login71.php setelah berhasil memperbarui password
+                header("Location:../login-done/login71.php");
+                exit(); // Menghentikan eksekusi lebih lanjut
             } else {
                 $message = "Error updating password.";
             }
@@ -39,7 +41,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 $conn->close();
 ?>
-
 
 
 

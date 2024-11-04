@@ -9,7 +9,7 @@ switch(isset($_SESSION['role'])){
         header('location: ../user/absen/main.php');
         break;
     case 'user':
-        header('location: ../user/absen/main.php');
+        header('location: ../admin/admin.php');
         break;
 }
 
@@ -18,13 +18,23 @@ if(isset($_POST['submit'])){
     $password = $_POST['password'];
     $sql = "SELECT * FROM user WHERE email='$email' AND password='$password'";
     $result = mysqli_query($conn,$sql);
-    
-    if($result->num_rows > 0){
+
+    if ($result->num_rows > 0) {
         $row = mysqli_fetch_assoc($result);
-        $_SESSION['email'] = $row['email'];
-        $_SESSION['role'] = $row['role'];
         // $_SESSION['username'] = $row['username'];
-        header('location: ../user/absen/main.php');
+        $_SESSION['role'] = $row['role'];
+        $_SESSION['email'] = $row['email'];
+
+        
+        switch($_SESSION['role']){
+            case 'admin':
+                header('location: ../admin/admin.php');
+                break;
+            case 'user':
+                header('location: ../user/absen/main.php');
+                break;
+        }
+        exit();
     } else {
         echo "<script>alert('Email atau password Anda salah. Silakan coba lagi!')</script>";
     }
@@ -396,7 +406,7 @@ if(isset($_POST['submit'])){
                         <label for="remember-me">
                             <input type="checkbox" id="remember-me"> Remember me
                         </label>
-                        <a href="rset.php">Forgot Password?</a>
+                        <a href="../forgot-pass-done/forgot.php">Forgot Password?</a>
                     </div>
                     <div class="buttons">
                         <button type="submit" name="submit" class="login-btn">LOGIN</button>                        
