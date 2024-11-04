@@ -16,11 +16,11 @@ if ($row = $banyak_admin->fetch_assoc()) {
     $admin = $row;
 }
 
-// Variables to store selected class and date
 $kelas = "";
 $date = "";
 
-if (isset($_POST['kelas'])) {
+// Process form data after submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kelas'], $_POST['date'])) {
     $kelas = $_POST['kelas'];
     $date = $_POST['date'];
     
@@ -34,13 +34,14 @@ if (isset($_POST['kelas'])) {
     } else {
         // Fetch students for the selected class from the history table
         $query = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu
-            FROM history
-            JOIN user ON history.nis = user.nis 
-            WHERE user.kelas = '$kelas' AND history.waktu = '$date'
-            ORDER BY history.waktu";
+                  FROM history
+                  JOIN user ON history.nis = user.nis 
+                  WHERE user.kelas = '$kelas' AND history.waktu = '$date'
+                  ORDER BY history.waktu";
     }
-    $result = $conn->query($query);
     
+    $result = $conn->query($query);
+
     // Generate HTML table rows with icons for edit and delete
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -65,6 +66,9 @@ if (isset($_POST['kelas'])) {
     }
 }
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -392,6 +396,7 @@ if (isset($_POST['kelas'])) {
         <div class="content-wrapper">
             <div class="table-container">
                 <h2>Data Absensi</h2>
+                <Form method="POST">
                 <select id="kelas-select" name="kelas">
                     <option value="">Select Kelas</option>
                     <option value="X RPL 1">X RPL 1</option>
@@ -411,14 +416,16 @@ if (isset($_POST['kelas'])) {
                     <option value="XII ANM">XII ANM</option>
                 </select>
                 <input id="date-input" name="date" type="date">
+                <input type="submit" name="submit" id="date-input">
+                </form>
                 <table class="data-table">
                     <thead>
                         <tr>
                             <th>NIS</th>
                             <th>Nama</th>
                             <th>Kelas</th>
-                            <th>Email</th>
-                            <th>Password</th>
+                            <th>Status</th>
+                            <th>Waktu</th>
                             <th>Action</th>
                         </tr>
                     </thead>
