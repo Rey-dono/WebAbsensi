@@ -4,8 +4,8 @@ include '../all/connection.php';
 if (isset($_POST['kelas'])) {
     $kelas = $_POST['kelas'];
     
-    // Fetch students for the selected class excluding those with the role 'admin'
-    $query = "SELECT nis, nama, kelas, email FROM user WHERE kelas = '$kelas' AND role != 'admin'";
+    // Fetch students for the selected class excluding those with the role 'admin' and order by NIS in ascending order
+    $query = "SELECT nis, nama, kelas, email, password FROM user WHERE kelas = '$kelas' AND role != 'admin' ORDER BY nis ASC";
     $result = $conn->query($query);
     
     // Generate HTML table rows with icons for edit and delete
@@ -16,6 +16,7 @@ if (isset($_POST['kelas'])) {
                     <td>{$row['nama']}</td>
                     <td>{$row['kelas']}</td>
                     <td>{$row['email']}</td>
+                    <td>{$row['password']}</td>
                     <td>
                         <a href='edit.php?nis={$row['nis']}' class='edit-btn'>
                             <i class='fas fa-edit'></i>
@@ -27,8 +28,7 @@ if (isset($_POST['kelas'])) {
                   </tr>";
         }
     } else {
-        echo "<tr><td colspan='5'>No data available</td></tr>";
+        echo "<tr><td colspan='6'>No data available</td></tr>";
     }
 }
-
 ?>

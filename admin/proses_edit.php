@@ -8,11 +8,14 @@ if (isset($_POST['simpan']) && isset($_POST['nis'])) {
     $nama = $_POST['nama'];
     $kelas = $_POST['kelas'];
     $email = $_POST['email'];
+    $password = $_POST['password'];
 
     // Prepare an SQL statement to update the data
-    $query = "UPDATE user SET nama = ?, kelas = ?, email = ? WHERE nis = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("ssss", $nama, $kelas, $email, $nis); // Assuming all fields are strings
+   // Prepare an SQL statement to update the data
+   $sql = "UPDATE user SET nama=?, kelas=?, email=?, password=? WHERE nis=?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssi", $nama, $kelas, $email, $password, $nis); // Assuming all fields are strings
 
     // Execute the statement and check for success
     if ($stmt->execute()) {

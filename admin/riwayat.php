@@ -327,7 +327,7 @@ if (isset($_POST['submit'])) {
             <li><a href="admin.php"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="#"><i class="fas fa-user-check"></i> Data Siswa</a></li>
             <li><a href="#"><i class="fas fa-user-cog"></i> Manajemen Admin</a></li>
-            <li><a href="riwayat.php"><i class="fas fa-history"></i> Riwayat Absen</a></li>
+            <li><a href="#"><i class="fas fa-history"></i> Riwayat Absen</a></li>
             <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
@@ -338,96 +338,6 @@ if (isset($_POST['submit'])) {
             <p>Dashboard for managing student attendance and admin settings</p>
         </div>
 
-        <div class="content-wrapper">
-            <div class="table-container">
-                <h2>Data Siswa</h2>
-                <select id="kelas-select">
-                    <option value="">Select Kelas</option>
-                    <option value="X RPL 1">X RPL 1</option>
-                    <option value="X RPL 2">X RPL 2</option>
-                    <option value="X DKV 1">X DKV 1</option>
-                    <option value="X DKV 2">X DKV 2</option>
-                    <option value="X ANM 1">X ANM 1</option>
-                    <option value="X ANM 2">X ANM 2</option>
-                    <option value="XI RPL 1">XI RPL 1</option>
-                    <option value="XI RPL 2">XI RPL 2</option>
-                    <option value="XI DKV 1">XI DKV 1</option>
-                    <option value="XI DKV 2">XI DKV 2</option>
-                    <option value="XI ANM 1">XI ANM 1</option>
-                    <option value="XI ANM 2">XI ANM 2</option>
-                    <option value="XII RPL">XII RPL</option>
-                    <option value="XII DKV">XII DKV</option>
-                    <option value="XII ANM">XII ANM</option>
-                </select>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>NIS</th>
-                            <th>Nama</th>
-                            <th>Kelas</th>
-                            <th>Email</th>
-                            <th>Password</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="student-table-body">
-                        <!-- Student data will be injected here via AJAX -->
-                    </tbody>
-                </table>
-            </div>
 
-            <div class="form-container">
-                <h2>Tambah Data Siswa</h2>
-                <form method="POST" action="">
-                    <div class="form-group">
-                        <label for="nis">NIS</label>
-                        <input type="number" name="nis" id="nis" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="nama">Nama</label>
-                        <input type="text" name="nama" id="nama" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="kelas">Kelas</label>
-                        <select name="kelas" id="kelas" required>
-                            <option value="X RPL 1">X RPL 1</option>
-                            <option value="X RPL 2">X RPL 2</option>
-                            <option value="X DKV 1">X DKV 1</option>
-                            <option value="X DKV 2">X DKV 2</option>
-                            <option value="X ANM 1">X ANM 1</option>
-                            <option value="X ANM 2">X ANM 2</option>
-                            <option value="XI RPL 1">XI RPL 1</option>
-                            <option value="XI RPL 2">XI RPL 2</option>
-                            <option value="XI DKV 1">XI DKV 1</option>
-                            <option value="XI DKV 2">XI DKV 2</option>
-                            <option value="XI ANM 1">XI ANM 1</option>
-                            <option value="XI ANM 2">XI ANM 2</option>
-                            <option value="XII RPL">XII RPL</option>
-                            <option value="XII DKV">XII DKV</option>
-                            <option value="XII ANM">XII ANM</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" id="email" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" name="password" id="password" required>
-                    </div>
-
-                    <button type="submit" class="submit-btn" name="submit">Submit</button>
-                    <!-- Edit Student Modal -->
-
-
-                </form>
-            </div>
-        </div>
-    </div>
-
-</body>
+        </body>
 </html>
