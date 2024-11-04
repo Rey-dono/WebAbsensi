@@ -16,28 +16,52 @@ if ($row = $banyak_admin->fetch_assoc()) {
     $admin = $row;
 }
 
-// Handle form submission
-if (isset($_POST['submit'])) {
-    $nis = $_POST['nis'];
-    $nama = $_POST['nama'];
-    $email_siswa = $_POST['email'];
-    $password = $_POST['password'];
+// Variables to store selected class and date
+$kelas = "";
+$date = "";
+
+if (isset($_POST['kelas'])) {
     $kelas = $_POST['kelas'];
+    $date = $_POST['date'];
+    
+    // Check if the selected date is today
+    $today = date("Y-m-d");
 
-    // Check if email already exists
-    $sql = "SELECT * FROM user WHERE email='$email_siswa'";
-    $result = $conn->query($sql);
-
-    if ($result && $result->num_rows === 0) {
-        // Insert new student data
-        $sql = "INSERT INTO user (nis, nama, kelas, email, password) VALUES ('$nis', '$nama', '$kelas', '$email_siswa', '$password')";
-        if ($conn->query($sql)) {
-            echo "<script>alert('Selamat, registrasi berhasil!');</script>";
-        } else {
-            echo "<script>alert('Woops! Terjadi kesalahan.');</script>";
+    // Prepare the query based on whether the date is today or not
+    if ($date === $today) {
+        // Fetch students for the selected class from the user table
+        $query = "SELECT nis, nama, kelas, status, waktu FROM user WHERE kelas = '$kelas' AND email != '$email' ORDER BY nis";
+    } else {
+        // Fetch students for the selected class from the history table
+        $query = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu
+            FROM history
+            JOIN user ON history.nis = user.nis 
+            WHERE user.kelas = '$kelas' AND history.waktu = '$date'
+            ORDER BY history.waktu";
+    }
+    $result = $conn->query($query);
+    
+    // Generate HTML table rows with icons for edit and delete
+    if ($result && $result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>
+                    <td>{$row['nis']}</td>
+                    <td>{$row['nama']}</td>
+                    <td>{$row['kelas']}</td>
+                    <td>{$row['status']}</td>
+                    <td>{$row['waktu']}</td>
+                    <td>
+                        <a href='edit.php?nis={$row['nis']}' class='edit-btn'>
+                            <i class='fas fa-edit'></i>
+                        </a>
+                        <a href='delete-siswa.php?nis={$row['nis']}' class='delete-btn' onclick='return confirm(\"Are you sure you want to delete this record?\");'>
+                            <i class='fas fa-trash-alt'></i>
+                        </a>
+                    </td>
+                  </tr>";
         }
     } else {
-        echo "<script>alert('Woops! Email sudah terdaftar.');</script>";
+        echo "<tr><td colspan='6'>No data available</td></tr>";
     }
 }
 ?>
@@ -50,8 +74,8 @@ if (isset($_POST['submit'])) {
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Base styling */
-        * {
+         /* Base styling */
+         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -299,6 +323,28 @@ if (isset($_POST['submit'])) {
             cursor: pointer;
             color: #555;
         }
+        #date-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+#date-input::-webkit-calendar-picker-indicator {
+    color: #2980B9;
+    opacity: 0.6;
+    cursor: pointer;
+}
+#date-input:focus {
+    outline: none;
+    border-color: #2980B9;
+}
+
 
     </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -306,14 +352,20 @@ if (isset($_POST['submit'])) {
         $(document).ready(function() {
             $('#kelas-select').change(function() {
                 var selectedKelas = $(this).val();
+                var selectedDate = $('#date-input').val(); // Get the date input value
                 $.ajax({
                     url: 'fetch-siswa.php', // URL to the PHP file that fetches students
                     type: 'POST',
-                    data: {kelas: selectedKelas},
+                    data: {kelas: selectedKelas, date: selectedDate}, // Send both class and date
                     success: function(data) {
                         $('#student-table-body').html(data);
                     }
                 });
+            });
+
+            // Trigger change event on date input
+            $('#date-input').change(function() {
+                $('#kelas-select').trigger('change');
             });
         });
     </script>
@@ -325,19 +377,58 @@ if (isset($_POST['submit'])) {
         <h2>Admin : <?= htmlspecialchars($admin['nama']); ?></h2>
         <ul>
             <li><a href="admin.php"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="#"><i class="fas fa-user-check"></i> Data Siswa</a></li>
-            <li><a href="#"><i class="fas fa-user-cog"></i> Manajemen Admin</a></li>
-            <li><a href="#"><i class="fas fa-history"></i> Riwayat Absen</a></li>
+            <li><a href="datasiswa.php"><i class="fas fa-user-check"></i> Data Siswa</a></li>
+            <li><a href="riwayat.php"><i class="fas fa-history"></i> Data Absensi</a></li>
             <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
 
     <div class="main-content">
         <div class="header">
-            <h1>Data Siswa SMKN 71 Jakarta</h1>
+            <h1>Data Absensi SMKN 71 Jakarta</h1>
             <p>Dashboard for managing student attendance and admin settings</p>
         </div>
 
+        <div class="content-wrapper">
+            <div class="table-container">
+                <h2>Data Absensi</h2>
+                <select id="kelas-select" name="kelas">
+                    <option value="">Select Kelas</option>
+                    <option value="X RPL 1">X RPL 1</option>
+                    <option value="X RPL 2">X RPL 2</option>
+                    <option value="X DKV 1">X DKV 1</option>
+                    <option value="X DKV 2">X DKV 2</option>
+                    <option value="X ANM 1">X ANM 1</option>
+                    <option value="X ANM 2">X ANM 2</option>
+                    <option value="XI RPL 1">XI RPL 1</option>
+                    <option value="XI RPL 2">XI RPL 2</option>
+                    <option value="XI DKV 1">XI DKV 1</option>
+                    <option value="XI DKV 2">XI DKV 2</option>
+                    <option value="XI ANM 1">XI ANM 1</option>
+                    <option value="XI ANM 2">XI ANM 2</option>
+                    <option value="XII RPL">XII RPL</option>
+                    <option value="XII DKV">XII DKV</option>
+                    <option value="XII ANM">XII ANM</option>
+                </select>
+                <input id="date-input" name="date" type="date">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>NIS</th>
+                            <th>Nama</th>
+                            <th>Kelas</th>
+                            <th>Email</th>
+                            <th>Password</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-table-body">
+                        <!-- Student data will be injected here via AJAX -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        </body>
+</body>
 </html>
