@@ -63,7 +63,7 @@ if (isset($_GET['nis'])) {
             height: 100vh;
             background-color: #fff;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            /* border-radius: 10px; */
             overflow: hidden;
         }
 
@@ -177,7 +177,7 @@ if (isset($_GET['nis'])) {
     <div class="container">
         <div class="left-section">
             <h1>Edit Data Siswa</h1>
-            <img src="image-12.png" alt="Update Illustration">
+            <img src="computer.png" alt="Update Illustration">
         </div>
 
         <div class="right-section">

@@ -326,8 +326,8 @@ if (isset($_POST['submit'])) {
         <ul>
             <li><a href="admin.php"><i class="fas fa-home"></i> Home</a></li>
             <li><a href="#"><i class="fas fa-user-check"></i> Data Siswa</a></li>
-            <li><a href="#"><i class="fas fa-user-cog"></i> Manajemen Admin</a></li>
-            <li><a href="riwayat.php"><i class="fas fa-history"></i> Riwayat Absen</a></li>
+            <!-- <li><a href="#"><i class="fas fa-user-cog"></i> Manajemen Admin</a></li> -->
+            <li><a href="riwayat.php"><i class="fas fa-history"></i> Data Absensi</a></li>
             <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </div>
