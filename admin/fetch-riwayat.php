@@ -21,21 +21,18 @@ if ($kelas && $date) {
                   WHERE kelas = '$kelas' AND email != '$email' 
                   ORDER BY nis";
     } else {
-        // Query for historical data from `history` table joined with `user`
+        // Query for historical data from `history` table joined with `user`, using DATE() function
         $query = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu
-                  FROM history
-                  JOIN user ON history.nis = user.nis 
-                  WHERE user.kelas = '$kelas' AND history.waktu = '$date'
-                  ORDER BY history.waktu";
+                  FROM user
+                  JOIN history ON user.nis = history.nis 
+                  WHERE user.kelas = '$kelas' AND DATE(history.waktu) = '$date'";
     }
 
     $result = $conn->query($query);
 
-    // Check for query execution errors
     if (!$result) {
         echo "<tr><td colspan='6'>Query Error: " . $conn->error . "</td></tr>";
     } elseif ($result->num_rows > 0) {
-        // Display data if rows are found
         while ($row = $result->fetch_assoc()) {
             echo "<tr>
                     <td>{$row['nis']}</td>
@@ -54,11 +51,9 @@ if ($kelas && $date) {
                   </tr>";
         }
     } else {
-        // Display message if no data is found
         echo "<tr><td colspan='6'>No data available for the selected class and date.</td></tr>";
     }
 } else {
-    // Prompt user to select both class and date if either is missing
     echo "<tr><td colspan='6'>Please select both a class and a date.</td></tr>";
 }
 ?>
