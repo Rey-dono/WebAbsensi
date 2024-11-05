@@ -15,60 +15,7 @@ $admin = [];
 if ($row = $banyak_admin->fetch_assoc()) {
     $admin = $row;
 }
-
-$kelas = "";
-$date = "";
-
-// Process form data after submission
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kelas'], $_POST['date'])) {
-    $kelas = $_POST['kelas'];
-    $date = $_POST['date'];
-    
-    // Check if the selected date is today
-    $today = date("Y-m-d");
-
-    // Prepare the query based on whether the date is today or not
-    if ($date === $today) {
-        // Fetch students for the selected class from the user table
-        $query = "SELECT nis, nama, kelas, status, waktu FROM user WHERE kelas = '$kelas' AND email != '$email' ORDER BY nis";
-    } else {
-        // Fetch students for the selected class from the history table
-        $query = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu
-                  FROM history
-                  JOIN user ON history.nis = user.nis 
-                  WHERE user.kelas = '$kelas' AND history.waktu = '$date'
-                  ORDER BY history.waktu";
-    }
-    
-    $result = $conn->query($query);
-
-    // Generate HTML table rows with icons for edit and delete
-    if ($result && $result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>
-                    <td>{$row['nis']}</td>
-                    <td>{$row['nama']}</td>
-                    <td>{$row['kelas']}</td>
-                    <td>{$row['status']}</td>
-                    <td>{$row['waktu']}</td>
-                    <td>
-                        <a href='edit.php?nis={$row['nis']}' class='edit-btn'>
-                            <i class='fas fa-edit'></i>
-                        </a>
-                        <a href='delete-siswa.php?nis={$row['nis']}' class='delete-btn' onclick='return confirm(\"Are you sure you want to delete this record?\");'>
-                            <i class='fas fa-trash-alt'></i>
-                        </a>
-                    </td>
-                  </tr>";
-        }
-    } else {
-        echo "<tr><td colspan='6'>No data available</td></tr>";
-    }
-}
 ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -291,6 +238,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kelas'], $_POST['date'
     color: #333;
     padding: 8px;
 }
+
+#submit-select, 
+#submit {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Add custom dropdown arrow */
+#submit-select::after, 
+#submit::after {
+    content: "▼";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #2980B9;
+}
+
+/* Style individual options in select (limited) */
+#submit-select option,
+#submit option {
+    background-color: #f4f4f9;
+    color: #333;
+    padding: 8px;
+}
 .password-container {
             position: relative;
             width: 100%;
@@ -351,28 +330,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kelas'], $_POST['date'
 
 
     </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#kelas-select').change(function() {
-                var selectedKelas = $(this).val();
-                var selectedDate = $('#date-input').val(); // Get the date input value
-                $.ajax({
-                    url: 'fetch-siswa.php', // URL to the PHP file that fetches students
-                    type: 'POST',
-                    data: {kelas: selectedKelas, date: selectedDate}, // Send both class and date
-                    success: function(data) {
-                        $('#student-table-body').html(data);
-                    }
-                });
-            });
-
-            // Trigger change event on date input
-            $('#date-input').change(function() {
-                $('#kelas-select').trigger('change');
-            });
-        });
-    </script>
 </head>
 <body>
 
@@ -396,7 +353,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kelas'], $_POST['date'
         <div class="content-wrapper">
             <div class="table-container">
                 <h2>Data Absensi</h2>
-                <Form method="POST">
+                <form method="POST" id="attendance-form">
                 <select id="kelas-select" name="kelas">
                     <option value="">Select Kelas</option>
                     <option value="X RPL 1">X RPL 1</option>
@@ -416,8 +373,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kelas'], $_POST['date'
                     <option value="XII ANM">XII ANM</option>
                 </select>
                 <input id="date-input" name="date" type="date">
-                <input type="submit" name="submit" id="date-input">
-                </form>
+                <!-- <input type="submit" name="submit" id="submit"> -->
+                <button type="submit" name="submit" id="submit">Submit</button>
+                
                 <table class="data-table">
                     <thead>
                         <tr>
@@ -431,11 +389,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['kelas'], $_POST['date'
                     </thead>
                     <tbody id="student-table-body">
                         <!-- Student data will be injected here via AJAX -->
+
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#attendance-form').on('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting the traditional way
+
+            // Use AJAX to submit form data
+            $.ajax({
+                url: 'fetch-riwayat.php',
+                type: 'POST',
+                data: $(this).serialize(), // Send form data
+                success: function(response) {
+                    $('#student-table-body').html(response); // Insert response data into table body
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', error);
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>
