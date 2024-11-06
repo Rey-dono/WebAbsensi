@@ -41,7 +41,7 @@ if ($kelas && $date) {
                     <td>{$row['status']}</td>
                     <td>{$row['waktu']}</td>
                     <td>
-                        <a href='edit-absen.php?nis={$row['nis']}' class='edit-btn'>
+                        <a href='edit-riwayat.php?nis={$row['nis']}' class='edit-btn'>
                             <i class='fas fa-edit'></i>
                         </a>
                         <a href='delete.php?nis={$row['nis']}' class='delete-btn' onclick='return confirm(\"Are you sure you want to delete this record?\");'>
