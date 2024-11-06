@@ -79,7 +79,7 @@ body, html {
 /* Right Section */
 .right-section {
     width: 40%;
-    background-color: #665F63;
+    background-color:#7b68ee ;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -105,7 +105,7 @@ body, html {
 }
 
 .logo-container {
-    background-color: #e0e0e0;
+    background-color:#cec8ef  ;
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 15px;
@@ -191,7 +191,7 @@ h3 {
 
     <div class="container">
         <div class="left-section">
-            <img src="gedungSekolah.jpg" alt="School Building" class="background-image">
+            <img src="apa.jpg" alt="School Building" class="background-image">
             <div class="contact-us">
                 <p>Contact Us</p>
                 <div class="icons">
