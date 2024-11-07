@@ -398,6 +398,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+ 
     $(document).ready(function() {
         $('#attendance-form').on('submit', function(event) {
             event.preventDefault(); // Prevent the form from submitting the traditional way
@@ -416,6 +417,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
             });
         });
     });
+    
 </script>
 
 </body>
