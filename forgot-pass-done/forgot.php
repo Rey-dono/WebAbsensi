@@ -130,7 +130,7 @@ $conn->close();
 
         .school-name {
             position: absolute;
-            bottom: 560px;
+            bottom: 530px;
             right: 20px;
             font-size: 18px;
             color: white;

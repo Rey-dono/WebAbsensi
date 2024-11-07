@@ -24,7 +24,11 @@ if ($kelas && $date) {
         // Query for historical data from `history` table joined with `user`, using DATE() function
         $query = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu
                   FROM user
+<<<<<<< HEAD
                   JOIN history ON user.nis = history.nis 
+=======
+                  JOIN history ON user.id = history.id_user
+>>>>>>> aisyah
                   WHERE user.kelas = '$kelas' AND DATE(history.waktu) = '$date'";
     }
 
@@ -41,7 +45,11 @@ if ($kelas && $date) {
                     <td>{$row['status']}</td>
                     <td>{$row['waktu']}</td>
                     <td>
+<<<<<<< HEAD
                         <a href='edit-absen.php?nis={$row['nis']}' class='edit-btn'>
+=======
+                        <a href='edit-riwayat.php?nis={$row['nis']}' class='edit-btn'>
+>>>>>>> aisyah
                             <i class='fas fa-edit'></i>
                         </a>
                         <a href='delete.php?nis={$row['nis']}' class='delete-btn' onclick='return confirm(\"Are you sure you want to delete this record?\");'>
