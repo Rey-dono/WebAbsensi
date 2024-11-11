@@ -10,8 +10,8 @@ $email = $_SESSION['email'];
 
 $siswa = $conn->query("SELECT * FROM user WHERE email ='$email'");
 
-if (mysqli_query($conn, "INSERT INTO history (id, nis, status, waktu)
-SELECT id, nis, status, waktu
+if (mysqli_query($conn, "INSERT INTO history (nis, status, waktu, id_user)
+SELECT nis, status, waktu, id
 FROM user WHERE email = '$email'")) {
     if (mysqli_query($conn, "UPDATE user SET status ='hadir', surat_sakit='', surat_izin='' WHERE email = '$email'")) {
         header("location: ../selamat/berhasil_absen.php");
