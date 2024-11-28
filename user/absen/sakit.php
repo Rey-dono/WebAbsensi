@@ -17,14 +17,15 @@ if (isset($_POST["submit"])) {
     }
     
 
-    $query = "INSERT INTO history (id, nis, status, waktu)
-    SELECT id, nis, status, waktu
+    $query = "INSERT INTO history (nis, status, waktu, id_user, surat)
+    SELECT nis, status, waktu, id, surat
     FROM user WHERE email = '$email'";
+    
 
     if (mysqli_query($conn, $query)) {
-    if (mysqli_query($conn, "UPDATE user SET status ='sakit', surat_sakit = '$surat',surat_izin='' WHERE email = '$email'")) {
-        header("location: ../selamat/berhasil_absen.php");
-    }
+        if (mysqli_query($conn, "UPDATE user SET status ='sakit', surat='$surat' WHERE email = '$email'")) {
+            header("location: ../selamat/berhasil_absen.php");
+        }
     
 
     } else {
@@ -62,7 +63,7 @@ function upload()
     $fileExt = pathinfo($namaFile, PATHINFO_EXTENSION);
     $newFileName = uniqid() . '.' . $fileExt;
 
-    $uploadDir = realpath(__DIR__ . '/../img/surat-sakit') . '/';
+    $uploadDir = realpath(__DIR__ . '/../img/surat') . '/';
     $uploadPath = $uploadDir . $newFileName;
 
     if (move_uploaded_file($tmpName, $uploadPath)) {

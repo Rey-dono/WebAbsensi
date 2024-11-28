@@ -14,23 +14,23 @@ try {
     // Query untuk insert ke history, pastikan menggunakan VALUES dengan data yang valid
 
     // Query untuk update di user
-    // $sql = "UPDATE user SET waktu='', status='alfa', surat_sakit='', surat_izin=''";
-    // if (!$conn->query($sql)) {
-    //     throw new Exception("Error resetting field: " . $conn->error);
-    // } else {
-    //     echo "Field reset successfully.";
-    // }
-
-    if (mysqli_query($conn, "INSERT INTO history (id, nis, status, waktu)
-SELECT id, nis, status, waktu
-FROM user")) {
-    if (mysqli_query($conn, "UPDATE user SET waktu='', status='alfa', surat_sakit='', surat_izin=''")) {
-        echo "Field reset successfully.";
-    } else {
+    $sql = "UPDATE user SET waktu='', status='alfa', surat_sakit='', surat_izin=''";
+    if (!$conn->query($sql)) {
         throw new Exception("Error resetting field: " . $conn->error);
+    } else {
+        echo "Field reset successfully.";
     }
+
+//     if (mysqli_query($conn, "INSERT INTO history (id, nis, status, waktu)
+// SELECT id, nis, status, waktu
+// FROM user")) {
+//     if (mysqli_query($conn, "UPDATE user SET waktu='', status='alfa', surat_sakit='', surat_izin=''")) {
+//         echo "Field reset successfully.";
+//     } else {
+//         throw new Exception("Error resetting field: " . $conn->error);
+//     }
     
-}
+// }
 
     // Commit transaksi jika kedua query berhasil
     $conn->commit();
