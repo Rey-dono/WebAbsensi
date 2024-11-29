@@ -15,10 +15,6 @@ if ($row = $banyak_admin->fetch_assoc()) {
     $admin = $row;
 }
 
-
-
-
-
 ?>
 
 
