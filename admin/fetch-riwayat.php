@@ -43,7 +43,7 @@ if ($kelas && $date) {
 
             // Handle the 'surat' column dynamically
             if (isset($row['surat'])) {
-                echo "<td>{$row['surat']}</td>";
+                echo "<td><img width='200' src='../user/img/surat/{$row['surat']}' /></td>";
             } else {
                 echo "<td>-</td>"; // Display a placeholder if 'surat' is not available
             }
