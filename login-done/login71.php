@@ -6,10 +6,10 @@ include '../all/connection.php';
 
 switch(isset($_SESSION['role'])){
     case 'admin':
-        header('location: ../user/absen/main.php');
+        header('location: ../admin/admin.php');
         break;
     case 'user':
-        header('location: ../admin/admin.php');
+        header('location: ../user/absen/main.php');
         break;
 }
 
