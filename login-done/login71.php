@@ -2,8 +2,6 @@
 session_start();
 include '../all/connection.php';
 
-
-
 switch(isset($_SESSION['role'])){
     case 'admin':
         header('location: ../admin/admin.php');

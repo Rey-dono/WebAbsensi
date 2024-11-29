@@ -5,7 +5,7 @@ include '../all/connection.php'; // Include the database connection
 $id = $nis = $waktu = $status = '';
 
 // Check if an ID was provided to load data for editing
-if (isset[($_GET['id'])) {
+if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // Fetch the current record from the `history` table based on the `id`
