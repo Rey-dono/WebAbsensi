@@ -388,7 +388,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
                             <th>Kelas</th>
                             <th>Status</th>
                             <th>Waktu</th>
-                            <th>Foto</th>
+                            <th>Surat</th>
                             <th>Action</th>
                         </tr>
                     </thead>
