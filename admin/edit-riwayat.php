@@ -8,13 +8,14 @@ if (!isset($_SESSION['email'])) {
 }
 
 $nis = isset($_GET['nis']) ? $_GET['nis'] : "";
-
+$waktuu = isset($_GET['waktu']) ? $_GET['waktu'] : "";
+$record = [];
 if ($nis) {
     // Check if this record is from today or a past date
     $today = date("Y-m-d");
 
     // Retrieve the record data from either the `user` or `history` table
-    $queryToday = "SELECT nis, nama, kelas, status, waktu 
+    $queryToday = "SELECT nis, nama, kelas, status, waktu, surat 
                    FROM user 
                    WHERE nis = '$nis' AND DATE(waktu) = '$today'";
 
@@ -23,9 +24,10 @@ if ($nis) {
 
     if ($isToday) {
         $record = $resultToday->fetch_assoc();
+        
     } else {
         // If it's a past record, retrieve data from the `history` table
-        $queryHistory = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu
+        $queryHistory = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu, history.surat
                          FROM user
                          JOIN history ON user.id = history.id_user
                          WHERE user.nis = '$nis'";
@@ -36,6 +38,7 @@ if ($nis) {
         }
     }
 
+    // Handle form submission to update data
     if (isset($_POST['simpan'])) {
         $nama = $_POST['nama'];
         $kelas = $_POST['kelas'];
@@ -52,12 +55,12 @@ if ($nis) {
             $updateQuery = "UPDATE history 
                             JOIN user ON user.id = history.id_user
                             SET user.nama = '$nama', user.kelas = '$kelas', history.status = '$status', history.waktu = '$waktu'
-                            WHERE user.nis = '$nis'";
+                            WHERE user.nis = '$nis' AND history.waktu = '$waktuu'";
         }
 
         if ($conn->query($updateQuery)) {
-            // Redirect to avoid resubmission on refresh
-            header("location: riwayat.php");
+            // Redirect to avoid resubmission on refresh and pass 'nis' in URL for reloading the updated data
+            header("location: riwayat.php?nis=" . urlencode($nis));
             exit();
         } else {
             echo "Error updating record: " . $conn->error;
@@ -68,8 +71,6 @@ if ($nis) {
     exit();
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -236,6 +237,7 @@ if ($nis) {
                             <td>
                                 <select name="kelas" required>
                                     <option value="">Pilih Kelas</option>
+                                  
                                     <option value="X RPL 1" <?php echo ($record['kelas'] === 'X RPL 1') ? 'selected' : ''; ?>>X RPL 1</option>
                                     <option value="X RPL 2" <?php echo ($record['kelas'] === 'X RPL 2') ?'selected' : ''; ?>>X RPL 2</option>
                                     <option value="X DKV 1" <?php echo ($record['kelas'] === 'X DKV 1') ? 'selected' : ''; ?>>X DKV 1</option>
@@ -252,41 +254,35 @@ if ($nis) {
                                     <option value="XII DKV" <?php echo ($record['kelas'] === 'XII DKV') ? 'selected' : ''; ?>>XII DKV</option>
                                     <option value="XII ANM" <?php echo ($record['kelas'] === 'XII ANM') ? 'selected' : ''; ?>>XII ANM</option>
                                     
-                                   
+                                    <!-- Add other class options here -->
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th>Status :</th>
-                            <td><select id="status" name="status">
-                <option value="hadir" <?php echo ($record['status'] === 'hadir') ? 'selected' : ''; ?>>Hadir</option>
-                <option value="sakit" <?php echo ($record['status'] === 'sakit') ? 'selected' : ''; ?>>Sakit</option>
-                <option value="izin" <?php echo ($record['status'] === 'izin') ? 'selected' : ''; ?>>Izin</option>
-                <option value="alfa" <?php echo ($record['status'] === 'alfa') ? 'selected' : ''; ?>>Alfa</option>
-            </select></td>
+                            <td>
+                                <select id="status" name="status">
+                                    <option value="hadir" <?php echo ($record['status'] === 'hadir') ? 'selected' : ''; ?>>Hadir</option>
+                                    <option value="sakit" <?php echo ($record['status'] === 'sakit') ? 'selected' : ''; ?>>Sakit</option>
+                                    <option value="izin" <?php echo ($record['status'] === 'izin') ? 'selected' : ''; ?>>Izin</option>
+                                    <option value="alfa" <?php echo ($record['status'] === 'alfa') ? 'selected' : ''; ?>>Alfa</option>
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <th>Waktu :</th>
                             <td>
-                                <div class="password-container">
-                                <input type="date" id="waktu" name="waktu" value="<?php echo htmlspecialchars(date('Y-m-d', strtotime($record['waktu']))); ?>">
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <button type="submit" name="simpan">Update Data</button>
+                                <input type="date" id="waktu" name="waktu" value="<?= htmlspecialchars(date('Y-m-d', strtotime($record['waktu']))); ?>" required>
                             </td>
                         </tr>
                     </table>
+                    <button type="submit" name="simpan">Simpan</button>
                 </form>
             </div>
         </div>
     </div>
-    <?php else: ?>
-        <p>Record not found.</p>
-    <?php endif; ?>
-    
-
+<?php else: ?>
+    <p>Data tidak ditemukan.</p>
+<?php endif; ?>
 </body>
 </html>

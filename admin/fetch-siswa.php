@@ -21,7 +21,7 @@ if (isset($_POST['kelas'])) {
                         <a href='edit.php?nis={$row['nis']}' class='edit-btn'>
                             <i class='fas fa-edit'></i>
                         </a>
-                        <a href='delete-siswa.php?nis={$row['nis']}' class='delete-btn' onclick='return confirm(\"Are you sure you want to delete this record?\");'>
+                        <a href='delete.php?nis={$row['nis']}' class='delete-btn' onclick='return confirm(\"Are you sure you want to delete this record?\");'>
                             <i class='fas fa-trash-alt'></i>
                         </a>
                     </td>

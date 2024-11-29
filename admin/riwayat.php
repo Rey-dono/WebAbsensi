@@ -353,6 +353,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
         <div class="content-wrapper">
             <div class="table-container">
                 <h2>Data Absensi</h2>
+
                 <form method="POST" id="attendance-form">
                 <select id="kelas-select" name="kelas">
                     <option value="">Select Kelas</option>
@@ -375,6 +376,9 @@ if ($row = $banyak_admin->fetch_assoc()) {
                 <input id="date-input" name="date" type="date">
                 <!-- <input type="submit" name="submit" id="submit"> -->
                 <button type="submit" name="submit" id="submit">Submit</button>
+
+                
+
                 
                 <table class="data-table">
                     <thead>
@@ -384,6 +388,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
                             <th>Kelas</th>
                             <th>Status</th>
                             <th>Waktu</th>
+                            <th>Foto</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -393,6 +398,13 @@ if ($row = $banyak_admin->fetch_assoc()) {
                     </tbody>
                 </table>
                 </form>
+                <form id="generate-pdf-form" action="pdf.php" method="post" target="_blank">
+    <input type="hidden" name="kelas" id="hidden-kelas">
+    <input type="hidden" name="date" id="hidden-date">
+    <button type="button" id="generate-pdf-btn" class="btn btn-primary">Generate PDF</button>
+</form>
+
+
             </div>
         </div>
     </div>
@@ -417,7 +429,48 @@ if ($row = $banyak_admin->fetch_assoc()) {
             });
         });
     });
-    
+    $(document).ready(function() {
+    // Handle tombol Submit (untuk memuat data ke tabel via AJAX)
+    $('#attendance-form').on('submit', function(event) {
+        event.preventDefault(); // Cegah submit form tradisional
+
+        $.ajax({
+            url: 'fetch-riwayat.php',
+            type: 'POST',
+            data: $(this).serialize(), // Kirim data form
+            success: function(response) {
+                $('#student-table-body').html(response); // Isi tabel dengan data dari server
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', error);
+            }
+        });
+    });
+
+    // Handle tombol Generate PDF
+    $('#generate-pdf-btn').on('click', function(event) {
+        event.preventDefault(); // Cegah submit form tradisional
+
+        // Ambil nilai dari dropdown dan input tanggal
+        const kelas = $('#kelas-select').val();
+        const date = $('#date-input').val();
+
+        if (!kelas || !date) {
+            alert('Pilih kelas dan tanggal terlebih dahulu.');
+            return;
+        }
+
+        // Masukkan nilai ke hidden input di form PDF
+        $('#hidden-kelas').val(kelas);
+        $('#hidden-date').val(date);
+
+        // Submit form PDF
+        $('#generate-pdf-form').submit();
+    });
+});
+
+
+
 </script>
 
 </body>
