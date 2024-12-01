@@ -14,7 +14,7 @@ try {
     // Query untuk insert ke history, pastikan menggunakan VALUES dengan data yang valid
 
     // Query untuk update di user
-    $sql = "UPDATE user SET waktu='', status='alfa', surat_sakit='', surat_izin=''";
+    $sql = "UPDATE user SET waktu='', status='alfa', surat=''";
     if (!$conn->query($sql)) {
         throw new Exception("Error resetting field: " . $conn->error);
     } else {
