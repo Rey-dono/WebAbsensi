@@ -26,15 +26,23 @@ if (!$siswa) {
 }
 
 // Handle the form submission
+// Handle the form submission
+// Handle the form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nama = $_POST['nama'];
     $kelas = $_POST['kelas'];
     $status = $_POST['status'];
     $waktu = $_POST['waktu'];
-    $surat = upload();
 
-    if(!$surat) {
-        die;
+    // Only upload the file if the status is not 'hadir'
+    if ($status !== 'hadir') {
+        $surat = upload(); // Call the upload function
+        if (!$surat) {
+            die;
+        }
+    } else {
+        // If the status is 'hadir', don't upload and use the existing surat
+        $surat = $siswa['surat'];
     }
 
     // Check for duplicate student name
@@ -61,6 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
+
 function upload()
 {
     $namaFile = $_FILES['surat_baru']['name'];
@@ -79,7 +88,7 @@ function upload()
     if ($ukuranFile > 1000000) {
         echo "<script>
                 alert('Ukuran gambar terlalu besar!');
-                window.location.href='izin.php';
+                window.location.href='edit-riwayat.php';
               </script>";
         return false;
     }
