@@ -62,149 +62,129 @@ $conn->close();
             padding: 0;
             box-sizing: border-box;
             font-family: Arial, sans-serif;
-            text-decoration: none;
         }
 
-        /* Latar belakang halaman */
         body {
-            background-color: #6c6666;
+            background-color: #f7f7f7;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        /* Container utama */
         .container {
-            margin-top: 100px;
-            background-color: #f9f9f9;
+            background-color: #ffffff;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 80%; /* Adjusted for better responsiveness */
-            max-width: 1200px; /* Maximum width */
+            width: 100%;
+            max-width: 1000px;
         }
 
-        /* Judul */
         h1 {
             margin-bottom: 20px;
-            color: #000;
+            color: #333;
+            font-size: 2rem;
         }
 
-        /* Kotak status */
         .status-container {
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-            margin-top: 20px;
+            justify-content: space-between;
+            margin: 30px 0;
         }
 
         .status {
-            width: 100px;
-            height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            flex: 1;
+            margin: 0 10px;
+            padding: 20px;
             border-radius: 10px;
-            background-color: #e0e0e0;
-            font-size: 2rem;
-            font-weight: bold;
             color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            text-align: center;
         }
 
-        /* Warna status */
+        .status:hover {
+            transform: scale(1.05);
+        }
+
         .hadir {
             background-color: #2ecc71;
-            width: 350px;
-            height: 350px;
         }
 
         .izin {
             background-color: #f1c40f;
-            width: 350px;
-            height: 350px;
         }
 
         .sakit {
-            background-color: red;
-            width: 350px;
-            height: 350px;
+            background-color: #e74c3c;
         }
 
-        /* Bagian jadwal */
         .schedule {
-            background-color: #7abaff;
-            display: inline-block;
-            margin: auto;
-            padding: 10px;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 2rem;
-            width: 100%; /* Make the table responsive */
+            margin: 30px 0;
+            text-align: left;
+            overflow-x: auto;
         }
 
-        .schedule table {
+        .schedule p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        table {
+            width: 100%;
             border-collapse: collapse;
-            width: 100%; /* Full width for the table */
+            background: #fff;
+            border: 1px solid #ddd;
         }
 
-        .schedule th, .schedule td {
-            border: 1px solid gray; /* Border for the cells */
-            padding: 20px;
-            text-align: center; /* Center align for better readability */
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
         }
 
-        /* Styles for the student data table */
-        .student-table {
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .pagination {
             margin-top: 20px;
-            width: 100%; /* Full width for the table */
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .student-table th {
-            background-color: darkgreen; /* Light gray background for header */
+        .pagination a {
+            padding: 10px 15px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            color: #007bff;
+            text-decoration: none;
+            transition: all 0.3s;
         }
 
-        /* Pagination container */
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
+        .pagination a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
 
-/* Pagination links */
-.pagination a {
-    color: #2d5d34; /* Dark green text */
-    padding: 10px 15px;
-    margin: 0 5px;
-    text-decoration: none;
-    font-weight: bold;
-    border: 1px solid #2d5d34; /* Dark green border */
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
-}
+        .pagination a.disabled {
+            pointer-events: none;
+            color: #ccc;
+            border-color: #ccc;
+        }
 
-/* Hover effect for pagination links */
-.pagination a:hover {
-    background-color: #2d5d34; /* Dark green background on hover */
-    color: #fff; /* White text */
-    border-color: #2d5d34;
-}
-
-/* Active page link */
-.pagination a.active {
-    background-color: #2d5d34; /* Darker green for active page */
-    color: #fff;
-    border-color: #2d5d34;
-}
-
-/* Disabled pagination link */
-.pagination a.disabled {
-    pointer-events: none;
-    color: #999; /* Lighter color for disabled state */
-    border-color: #999; /* Lighter border */
-    background-color: #f0f0f0; /* Light background */
-}
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
 
 
     </style>

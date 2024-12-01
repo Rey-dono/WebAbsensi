@@ -64,312 +64,173 @@ if(isset($_POST['submit'])){
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            overflow: hidden; /* Supaya halaman tidak scrollable jika tidak perlu */
-            margin: 0;
+            background-color: #f7f7f7;
         }
 
         .container {
             display: flex;
-            width: 100%;
-            height: 100vh;
-            background-color: #D9D9D9;
-            border-radius: 0; /* Menghapus border-radius untuk tampilan penuh */
-            box-shadow: none; /* Menghapus box-shadow untuk tampilan penuh */
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            background: #fff;
+            border-radius: 15px;
             overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
+        /* Left Section (Image + Text) */
         .illustration {
-            flex: 1;
-            background-color: #666064;
+            flex: 1.5;
+            background: #7b68ee;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
             position: relative;
-            padding: 40px;
         }
 
         .illustration img {
-            width: 100%;
+            max-width: 80%;
             height: auto;
-            max-width: 600px; /* Menambah lebar maksimal ilustrasi */
+            margin-bottom: 20px;
         }
 
-        .illustration-text {
-            position: absolute;
-            top: 40px;
-            left: 40px;
-            font-size: 24px;
+        .illustration h1 {
+            font-size: 28px;
             font-weight: 600;
-            color: white;
+            margin-bottom: 10px;
         }
 
+        .illustration p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* Right Section (Form) */
         .login-form {
             flex: 1;
-            padding: 60px;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 40px;
         }
 
         .form-container {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             width: 100%;
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            max-width: 400px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
-        .logo-box {
-            margin-bottom: 30px;
-        }
-
-        .logo-box img {
-            width: 180px;
+        .form-container img {
+            width: 120px;
             height: auto;
+            margin-bottom: 20px;
+        }
+
+        .form-container h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
         }
 
         .input-group {
+            margin-bottom: 20px;
             position: relative;
-            margin-bottom: 25px;
-            width: 100%;
-        }
-
-        .input-group img {
-            position: absolute;
-            top: 50%;
-            left: 20px;
-            width: 24px;
-            height: auto;
-            transform: translateY(-50%);
         }
 
         .input-group input {
             width: 100%;
-            padding: 15px 20px 15px 60px; /* Tambahkan padding untuk ikon */
-            font-size: 16px;
+            padding: 12px 15px;
             border: 1px solid #ddd;
-            border-radius: 30px;
-            outline: none;
-            background-color: #f9f9f9;
-            transition: border-color 0.3s;
+            border-radius: 25px;
+            font-size: 14px;
+            background: #f9f9f9;
+            transition: all 0.3s;
         }
 
         .input-group input:focus {
-            border-color: #007bff;
-            background-color: #fff;
+            border-color: #7b68ee;
+            background: #fff;
         }
 
         .options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
-            width: 100%;
-        }
-
-        .options label {
+            margin-bottom: 20px;
             font-size: 14px;
-            color: #333;
-            display: flex;
-            align-items: center;
-        }
-
-        .options label input {
-            margin-right: 8px;
         }
 
         .options a {
-            font-size: 14px;
-            color: #007bff;
+            color: #7b68ee;
             text-decoration: none;
             transition: color 0.3s;
         }
 
         .options a:hover {
-            color: #0056b3;
+            color: #5e4edc;
         }
 
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .buttons button {
             width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .login-btn {
-            width: 48%;
             padding: 12px;
             border: none;
-            background-color: #72ADF0;
+            border-radius: 25px;
+            font-size: 16px;
+            background: #7b68ee;
             color: white;
-            font-size: 16px;
-            border-radius: 30px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
         }
 
-        .login-btn:hover {
-            background-color: #5e9dd9;
-        }
-
-        .signup-btn {
-            width: 48%;
-            padding: 12px;
-            background-color: #D9D9D9;
-            color: #007bff;
-            border: 1px solid #ddd;
-            text-align: center;
-            font-size: 16px;
-            border-radius: 30px;
-            text-decoration: none;
-            display: inline-block;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .signup-btn:hover {
-            background-color: #c3c3c3;
-            color: #6c9edc;
+        .buttons button:hover {
+            background: #5e4edc;
         }
 
         .register-link {
+            margin-top: 10px;
             font-size: 14px;
-            text-align: center;
-            width: 100%;
         }
 
         .register-link a {
-            color: #007bff;
+            color: #7b68ee;
             text-decoration: none;
+            font-weight: 500;
             transition: color 0.3s;
         }
 
         .register-link a:hover {
-            color: #0056b3;
+            color: #5e4edc;
         }
 
-        /* Responsif untuk layar lebih kecil */
-        @media (max-width: 1024px) {
+        @media (max-width: 768px) {
             .container {
                 flex-direction: column;
                 height: auto;
             }
 
-            .illustration, .login-form {
+            .illustration {
                 flex: none;
                 width: 100%;
                 padding: 20px;
             }
 
-            .illustration img {
-                max-width: 400px;
-            }
-
-            .illustration-text {
-                font-size: 20px;
-                top: 20px;
-                left: 20px;
-            }
-
-            .form-container {
-                max-width: 400px;
-                padding: 30px;
-            }
-
-            .logo-box img {
-                width: 150px;
-            }
-
-            .input-group img {
-                left: 15px;
-                width: 20px;
-            }
-
-            .input-group input {
-                padding: 12px 15px 12px 50px;
-                font-size: 14px;
-            }
-
-            .options {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .options a {
-                margin-left: 0;
-                margin-top: 10px;
-            }
-
-            .buttons {
-                flex-direction: column;
-            }
-
-            .login-btn, .signup-btn {
+            .login-form {
+                flex: none;
                 width: 100%;
-                margin: 5px 0;
-            }
-
-            .register-link {
-                font-size: 13px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .illustration img {
-                max-width: 300px;
-            }
-
-            .illustration-text {
-                font-size: 18px;
-            }
-
-            .form-container {
                 padding: 20px;
-            }
-
-            .logo-box img {
-                width: 130px;
-            }
-
-            .input-group img {
-                left: 10px;
-                width: 18px;
-            }
-
-            .input-group input {
-                padding: 10px 10px 10px 40px;
-                font-size: 13px;
-            }
-
-            .options label {
-                font-size: 12px;
-            }
-
-            .options a {
-                font-size: 12px;
-            }
-
-            .buttons {
-                flex-direction: column;
-            }
-
-            .login-btn, .signup-btn {
-                width: 100%;
-                margin: 5px 0;
-                font-size: 14px;
-            }
-
-            .register-link {
-                font-size: 12px;
             }
         }
     </style>
