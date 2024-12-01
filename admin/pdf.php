@@ -1,5 +1,7 @@
 <?php
 define('FPDF_FONTPATH', '../fpdf/font/');
+
+// Inklusi library FPDF
 require('../fpdf/fpdf.php');
 include '../all/connection.php';
 
@@ -13,7 +15,7 @@ if (empty($kelas) || empty($date)) {
 }
 
 // Query untuk mengambil data absensi
-$query = "SELECT history.nis AS nis, user.nama AS nama, user.kelas AS kelas, history.status AS status, history.waktu AS waktu, history.surat AS surat
+$query = "SELECT history.nis AS nis, user.nama AS nama, user.kelas AS kelas, history.status AS status, history.waktu AS waktu 
           FROM history 
           JOIN user ON history.nis = user.nis 
           WHERE user.kelas = ? AND DATE(history.waktu) = ?";
@@ -51,16 +53,6 @@ while ($row = $result->fetch_assoc()) {
     $pdf->Cell(30, 10, $row['status'], 1);
     $pdf->Cell(50, 10, $row['waktu'], 1);
     $pdf->Ln();
-
-    // If there's a 'surat' image to display
-    if (!empty($row['surat']) && file_exists('../uploads/' . $row['surat'])) {
-        // Path to the image
-        $imagePath = '../uploads/' . $row['surat'];
-
-        // Resize the image to fit the page (example: 40mm x 40mm)
-        $pdf->Image($imagePath, $pdf->GetX(), $pdf->GetY(), 40, 40);
-        $pdf->Ln(40); // Move to the next line after the image
-    }
 }
 
 // Tutup koneksi
@@ -70,7 +62,6 @@ $conn->close();
 // Output PDF
 $pdf->Output('I', 'Data_Absensi_' . $kelas . '_' . $date . '.pdf');
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
