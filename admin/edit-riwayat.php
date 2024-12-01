@@ -3,72 +3,103 @@ session_start();
 include '../all/connection.php';
 
 if (!isset($_SESSION['email'])) {
-    header("location: ../login-done/login71.php");
+    header("Location: ../login-done/login71.php");
     exit();
 }
 
-$nis = isset($_GET['nis']) ? $_GET['nis'] : "";
-$waktuu = isset($_GET['waktu']) ? $_GET['waktu'] : "";
-$record = [];
-if ($nis) {
-    // Check if this record is from today or a past date
-    $today = date("Y-m-d");
+$nis = $_GET['nis'] ?? null;
 
-    // Retrieve the record data from either the `user` or `history` table
-    $queryToday = "SELECT nis, nama, kelas, status, waktu, surat 
-                   FROM user 
-                   WHERE nis = '$nis' AND DATE(waktu) = '$today'";
+if (!$nis) {
+    echo "nis is missing!";
+    exit();
+}
 
-    $resultToday = $conn->query($queryToday);
-    $isToday = ($resultToday && $resultToday->num_rows > 0);
+// Fetch the student data
+$siswaQuery = $conn->prepare("SELECT * FROM user WHERE nis = ?");
+$siswaQuery->bind_param("s", $nis);
+$siswaQuery->execute();
+$siswa = $siswaQuery->get_result()->fetch_assoc();
 
-    if ($isToday) {
-        $record = $resultToday->fetch_assoc();
-        
-    } else {
-        // If it's a past record, retrieve data from the `history` table
-        $queryHistory = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu, history.surat
-                         FROM user
-                         JOIN history ON user.id = history.id_user
-                         WHERE user.nis = '$nis'";
-                         
-        $resultHistory = $conn->query($queryHistory);
-        if ($resultHistory && $resultHistory->num_rows > 0) {
-            $record = $resultHistory->fetch_assoc();
-        }
+if (!$siswa) {
+    echo "Data not found!";
+    exit();
+}
+
+// Handle the form submission
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $nama = $_POST['nama'];
+    $kelas = $_POST['kelas'];
+    $status = $_POST['status'];
+    $waktu = $_POST['waktu'];
+    $surat = upload();
+
+    if(!$surat) {
+        die;
     }
 
-    // Handle form submission to update data
-    if (isset($_POST['simpan'])) {
-        $nama = $_POST['nama'];
-        $kelas = $_POST['kelas'];
-        $status = $_POST['status'];
-        $waktu = $_POST['waktu'];
+    // Check for duplicate student name
+    $duplicateQuery = $conn->prepare("SELECT * FROM user WHERE nama = ? AND nis != ?");
+    $duplicateQuery->bind_param("ss", $nama, $nis);
+    $duplicateQuery->execute();
+    $duplicateResult = $duplicateQuery->get_result();
 
-        if ($isToday) {
-            // Update today's record in the `user` table
-            $updateQuery = "UPDATE user 
-                            SET nama = '$nama', kelas = '$kelas', status = '$status', waktu = '$waktu' 
-                            WHERE nis = '$nis'";
-        } else {
-            // Update historical record in the `history` table
-            $updateQuery = "UPDATE history 
-                            JOIN user ON user.id = history.id_user
-                            SET user.nama = '$nama', user.kelas = '$kelas', history.status = '$status', history.waktu = '$waktu'
-                            WHERE user.nis = '$nis' AND history.waktu = '$waktuu'";
-        }
+    if ($duplicateResult->num_rows > 0) {
+        echo "<script>alert('Nama sudah digunakan oleh siswa lain!');</script>";
+    } else {
+        // Update student data
+        $updateQuery = $conn->prepare(
+            "UPDATE user SET nama = ?, kelas = ?, status = ?, waktu = ?, surat = ? WHERE nis = ?"
+        );
+        $updateQuery->bind_param("ssssss", $nama, $kelas, $status, $waktu, $surat, $nis);
 
-        if ($conn->query($updateQuery)) {
-            // Redirect to avoid resubmission on refresh and pass 'nis' in URL for reloading the updated data
-            header("location: riwayat.php?nis=" . urlencode($nis));
+        if ($updateQuery->execute()) {
+            header("Location: riwayat.php");
             exit();
         } else {
-            echo "Error updating record: " . $conn->error;
+            echo "<script>alert('Gagal memperbarui data!');</script>";
         }
     }
-} else {
-    echo "No record specified.";
-    exit();
+}
+
+function upload()
+{
+    $namaFile = $_FILES['surat_baru']['name'];
+    $ukuranFile = $_FILES['surat_baru']['size'];
+    $error = $_FILES['surat_baru']['error'];
+    $tmpName = $_FILES['surat_baru']['tmp_name'];
+
+    if ($error === 4) {
+        echo "<script>
+                alert('Pilih gambar terlebih dahulu!');
+                window.location.href='izin.php';
+              </script>";
+        return false;
+    }
+
+    if ($ukuranFile > 1000000) {
+        echo "<script>
+                alert('Ukuran gambar terlalu besar!');
+                window.location.href='izin.php';
+              </script>";
+        return false;
+    }
+
+    // Generate a unique file name to avoid conflicts
+    $fileExt = pathinfo($namaFile, PATHINFO_EXTENSION);
+    $newFileName = uniqid() . '.' . $fileExt;
+
+    $uploadDir = realpath(__DIR__ . '/../user/img/surat') . '/';
+    $uploadPath = $uploadDir . $newFileName;
+
+    if (move_uploaded_file($tmpName, $uploadPath)) {
+        return $newFileName;
+    } else {
+        echo "<script>
+                alert('Gagal mengupload file!');
+                window.location.href='riwayat.php';
+              </script>";
+        return false;
+    }
 }
 ?>
 
@@ -212,77 +243,74 @@ if ($nis) {
     </style>
 </head>
 <body>
-<?php if ($record): ?>
-    <div class="container">
-        <div class="left-section">
-            <h1>Edit Data Siswa</h1>
-            <img src="computer.png" alt="Update Illustration">
-        </div>
+<div class="container">
+    <div class="left-section">
+        <h1>Edit Data Siswa</h1>
+        <img src="computer.png" alt="Update Illustration">
+    </div>
 
-        <div class="right-section">
-            <div class="edit-box">
-                <h1>Edit Data Siswa</h1>
-                <form method="POST">
-                    <table class="form-table">
-                        <tr>
-                            <th>NIS :</th>
-                            <td><input type="text" name="nis" value="<?= htmlspecialchars($record['nis']); ?>" readonly></td>
-                        </tr>
-                        <tr>
-                            <th>Nama :</th>
-                            <td><input type="text" name="nama" placeholder="Masukkan Nama" value="<?= htmlspecialchars($record['nama']); ?>" required></td>
-                        </tr>
-                        <tr>
-                            <th>Kelas :</th>
-                            <td>
-                                <select name="kelas" required>
-                                    <option value="">Pilih Kelas</option>
-                                  
-                                    <option value="X RPL 1" <?php echo ($record['kelas'] === 'X RPL 1') ? 'selected' : ''; ?>>X RPL 1</option>
-                                    <option value="X RPL 2" <?php echo ($record['kelas'] === 'X RPL 2') ?'selected' : ''; ?>>X RPL 2</option>
-                                    <option value="X DKV 1" <?php echo ($record['kelas'] === 'X DKV 1') ? 'selected' : ''; ?>>X DKV 1</option>
-                                    <option value="X DKV 2" <?php echo ($record['kelas'] === 'X DKV 2') ? 'selected' : ''; ?>>X DKV 2I</option>
-                                    <option value="X ANM 1" <?php echo ($record['kelas'] === 'X ANM 1') ? 'selected' : ''; ?>>X ANM 1</option>
-                                    <option value="X ANM 2" <?php echo ($record['kelas'] === 'X ANM 2') ? 'selected' : ''; ?>>X ANM 2</option>
-                                    <option value="XI RPL 1" <?php echo ($record['kelas'] === 'XI RPL 1') ? 'selected' : ''; ?>>XI RPL 1</option>
-                                    <option value="XI RPL 2" <?php echo ($record['kelas'] === 'XI RPL 2') ? 'selected' : ''; ?>>XI RPL 2</option>
-                                    <option value="XI DKV 1" <?php echo ($record['kelas'] === 'XI DKV 1') ? 'selected' : ''; ?>>XI DKV 1</option>
-                                    <option value="XI DKV 2" <?php echo ($record['kelas'] === 'XI DKV 2') ?'selected' : ''; ?>>XI DKV 2</option>
-                                    <option value="XI ANM 1" <?php echo ($record['kelas'] === 'XI ANM 1') ? 'selected' : ''; ?>>XI ANM 1</option>
-                                    <option value="XI ANM 2" <?php echo ($record['kelas'] === 'XI ANM 2') ? 'selected' : ''; ?>>XI ANM 2</option>
-                                    <option value="XII RPL" <?php echo ($record['kelas'] === 'XII RPL') ? 'selected' : ''; ?>>XII RPL</option>
-                                    <option value="XII DKV" <?php echo ($record['kelas'] === 'XII DKV') ? 'selected' : ''; ?>>XII DKV</option>
-                                    <option value="XII ANM" <?php echo ($record['kelas'] === 'XII ANM') ? 'selected' : ''; ?>>XII ANM</option>
-                                    
-                                    <!-- Add other class options here -->
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Status :</th>
-                            <td>
-                                <select id="status" name="status">
-                                    <option value="hadir" <?php echo ($record['status'] === 'hadir') ? 'selected' : ''; ?>>Hadir</option>
-                                    <option value="sakit" <?php echo ($record['status'] === 'sakit') ? 'selected' : ''; ?>>Sakit</option>
-                                    <option value="izin" <?php echo ($record['status'] === 'izin') ? 'selected' : ''; ?>>Izin</option>
-                                    <option value="alfa" <?php echo ($record['status'] === 'alfa') ? 'selected' : ''; ?>>Alfa</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Waktu :</th>
-                            <td>
-                                <input type="date" id="waktu" name="waktu" value="<?= htmlspecialchars(date('Y-m-d', strtotime($record['waktu']))); ?>" required>
-                            </td>
-                        </tr>
-                    </table>
-                    <button type="submit" name="simpan">Simpan</button>
-                </form>
-            </div>
+    <div class="right-section">
+        <div class="edit-box">
+            <h1>Edit Data Siswa</h1>
+            <form method="POST" enctype="multipart/form-data">
+                <table class="form-table">
+                    <tr>
+                        <th>nis:</th>
+                        <td><input type="text" name="nis" value="<?= htmlspecialchars($siswa['nis']) ?>" readonly></td>
+                    </tr>
+                    <tr>
+                        <th>Nama:</th>
+                        <td><input type="text" name="nama" value="<?= htmlspecialchars($siswa['nama']) ?>" required></td>
+                    </tr>
+                    <tr>
+                        <th>Kelas:</th>
+                        <td>
+                            <select name="kelas" required>
+                                <option value="">Pilih Kelas</option>
+                                <?php
+                                $classes = [
+                                    "X RPL 1", "X RPL 2", "X DKV 1", "X DKV 2", 
+                                    "X ANM 1", "X ANM 2", "XI RPL 1", "XI RPL 2",
+                                    "XI DKV 1", "XI DKV 2", "XI ANM 1", "XI ANM 2",
+                                    "XII RPL", "XII DKV", "XII ANM"
+                                ];
+                                foreach ($classes as $class) {
+                                    $selected = $class === $siswa['kelas'] ? 'selected' : '';
+                                    echo "<option value=\"$class\" $selected>$class</option>";
+                                }
+                                ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            <select name="status" required>
+                                <option value="hadir" <?= $siswa['status'] === 'hadir' ? 'selected' : '' ?>>Hadir</option>
+                                <option value="sakit" <?= $siswa['status'] === 'sakit' ? 'selected' : '' ?>>Sakit</option>
+                                <option value="izin" <?= $siswa['status'] === 'izin' ? 'selected' : '' ?>>Izin</option>
+                                <option value="alfa" <?= $siswa['status'] === 'alfa' ? 'selected' : '' ?>>Alfa</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Waktu:</th>
+                        <td>
+                            <input type="date" name="waktu" value="<?= htmlspecialchars(date('Y-m-d', strtotime($siswa['waktu']))) ?>" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>surat:</th>
+                        <td>
+                            <img src="../user/img/surat/<?= $siswa['surat']?>" width="100px" alt="">
+                            <input type="file" name="surat_baru" id="">
+                        </td>
+                    </tr>
+                </table>
+                <button type="submit">Simpan</button>
+            </form>
         </div>
     </div>
-<?php else: ?>
-    <p>Data tidak ditemukan.</p>
-<?php endif; ?>
+</div>
 </body>
 </html>

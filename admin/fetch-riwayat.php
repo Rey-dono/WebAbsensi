@@ -22,7 +22,7 @@ if ($kelas && $date) {
                   ORDER BY nis";
     } else {
         // Query for historical data from `history` table joined with `user`
-        $query = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu 
+        $query = "SELECT user.nis, user.nama, user.kelas, history.status, history.waktu, history.surat 
                   FROM user
                   JOIN history ON user.id = history.id_user
                   WHERE user.kelas = '$kelas' AND DATE(history.waktu) = '$date'";
@@ -42,8 +42,14 @@ if ($kelas && $date) {
                     <td>{$row['waktu']}</td>";
 
             // Handle the 'surat' column dynamically
-            if (isset($row['surat'])) {
-                echo "<td><img width='200' src='../user/img/surat/{$row['surat']}' /></td>";
+            if (isset($row['surat']) && !empty($row['surat'])) {
+                echo "<td>
+                        <img width='200' src='../user/img/surat/{$row['surat']}' alt='Surat'/>
+                        <br>
+                        <a href='../user/img/surat/{$row['surat']}' target='_blank' style='color:black; text-decoration:none'>
+                            View
+                        </a>
+                      </td>";
             } else {
                 echo "<td>-</td>"; // Display a placeholder if 'surat' is not available
             }
