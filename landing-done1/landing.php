@@ -9,7 +9,8 @@
 
 
     <style>
-        * {
+        /* Reset */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -18,172 +19,139 @@
 
 body, html {
     height: 100%;
-    /* font-family: Arial, sans-serif; Menggunakan font Arial untuk seluruh halaman */
-    background-color: #f0f0f0;
+    background-color: #edf6f9;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Poppins', sans-serif;
 }
 
+/* Container */
 .container {
     display: flex;
-    width: 100%; /* Membuat container mengisi lebar layar penuh */
-    height: 100vh; /* Membuat container mengisi tinggi layar penuh */
-    background-color: #fff;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    /* border-radius: 10px; */
+    width: 90%; 
+    max-width: 1200px; 
+    height: 80vh;
+    background: linear-gradient(135deg, #7b68ee, #89cff0);
+    border-radius: 20px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    
 }
 
 /* Left Section */
 .left-section {
+    width: 50%;
+    background-color: #f9f9f9;
     position: relative;
-    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
 }
 
-.background-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Membuat gambar memenuhi seluruh kotak */
+.left-section img {
+    width: 80%;
+    max-width: 400px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.contact-us {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    color: white;
-}
-
-.contact-us {
+.left-section p {
     font-size: 18px;
-    margin: 0;
-    background-color: gray;
-    opacity: 0.7;
-    padding: 5px;
-    border-radius: 15px
+    color: #555;
 }
 
 .icons {
     display: flex;
-    gap: 10px;
-    margin-top: 10px;
+    gap: 15px;
+    margin-top: 20px;
 }
 
 .icon {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.icon:hover {
+    transform: scale(1.2);
 }
 
 /* Right Section */
 .right-section {
-    width: 40%;
-    background-color:#7b68ee ;
+    width: 50%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px; /* Memberi ruang di dalam kotak */
-}
-
-.login-box {
-    background-color: #fff;
-    padding: 30px; /* Memperbesar padding untuk memberi ruang lebih besar */
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 85%; /* Lebih besar sedikit agar tidak terlalu kecil */
-    max-width: 350px; /* Lebar maksimal untuk login-box agar standar */
-    position: relative;
-}
-
-.inner-box {
-    background-color: #020202;
-    border-radius: 10px;
-    padding: 15px; /* Memberi ruang yang lebih rapi */
-    text-align: center;
-    margin-bottom: 20px;
+    background-color: #ffffff;
+    padding: 40px;
 }
 
 .logo-container {
-    background-color:#cec8ef  ;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    max-width: 300px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column; /* Stack elements vertically */
-    justify-content: center;
-    align-items: center;
-    text-align: center; /* Center the text */
-}
-
-.logo {
-    width: 300px;
     text-align: center;
+    margin-bottom: 30px;
 }
 
-h3 {
-    font-size: 20px;
-    color: #333;
-    margin-top: 10px; /* Adjust the spacing between logo and heading */
-    text-align: center;
+.logo-container img {
+    width: 100px;
+    margin-bottom: 10px;
 }
 
-.logo-container p{
-    font-size: 25px;
-    /* font-weight: bold; */
+.logo-container p {
+    font-size: 22px;
+    color: #7b68ee;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
-.subtext {
+.absensi-title {
     font-size: 16px;
-    color: #333;
-    margin-bottom: 20px;
+    color: #555;
+    margin-bottom: 30px;
 }
 
 .buttons {
-    /* display: flex; */
-    /* justify-content: space-between; */
-    margin-top: 10px; /* Mengurangi jarak agar tombol lebih ke atas */
-    width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 300px;
 }
 
-.login-btn, .register-btn {
-    width: 48%;
-    padding: 10px;
-    border-radius: 25px;
+button {
+    width: 100%;
+    padding: 15px;
+    border-radius: 30px;
     border: none;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: bold;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
 
-.login-btn {
-    background-color: #72ADF0;
-    color: white;
+button.login-btn {
+    background-color: #7b68ee;
+    color: #fff;
 }
 
-.register-btn {
-    background-color: white;
-    color: #72ADF0;
-    border: 1px solid #ccc;
+button.login-btn:hover {
+    background-color: #5a4abe;
 }
 
-.login-btn:hover, .register-btn:hover {
-    opacity: 0.8;
+button.register-btn {
+    background-color: #edf6f9;
+    color: #7b68ee;
+    border: 2px solid #7b68ee;
 }
 
-.register-btn:hover {
-    background-color: #ccc;
+button.register-btn:hover {
+    background-color: #7b68ee;
+    color: #fff;
 }
 
-/* Additional style for 'Absensi Harian Siswa' */
-.absensi-title {
-    font-size: 20px;
-    color: #333;
-    margin-top: 20px; /* Memberi jarak antara logo dan judul */
-    text-align: center;
-    margin-bottom: 30px; /* Memberikan jarak bawah yang lebih besar */
-}
 
     </style>
 </head>
