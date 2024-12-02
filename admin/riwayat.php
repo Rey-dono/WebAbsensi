@@ -401,7 +401,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
                 <form id="generate-pdf-form" action="pdf.php" method="post" target="_blank">
     <input type="hidden" name="kelas" id="hidden-kelas">
     <input type="hidden" name="date" id="hidden-date">
-    <button type="button" id="generate-pdf-btn" class="btn btn-primary">Generate PDF</button>
+    <button type="button" id="submit">Generate PDF</button>
 </form>
 
 
