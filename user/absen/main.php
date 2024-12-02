@@ -48,7 +48,6 @@ $total_pages = ceil($total_records / $records_per_page);
 $conn->close();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -67,7 +66,7 @@ $conn->close();
 
         /* Latar belakang halaman */
         body {
-            background-color: #6c6666;
+            background-color: #fff; /* Set background to white */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -95,41 +94,67 @@ $conn->close();
         /* Kotak status */
         .status-container {
             display: flex;
-            justify-content: space-around;
+            justify-content: space-between; /* Add spacing between status boxes */
             margin-bottom: 30px;
             margin-top: 20px;
         }
 
         .status {
-            width: 100px;
-            height: 100px;
+            width: 150px; /* Reduced size of the divs */
+            height: 150px;
             display: flex;
             justify-content: center;
             align-items: center;
             border-radius: 10px;
-            background-color: #e0e0e0;
-            font-size: 2rem;
+            font-size: 1.5rem; /* Smaller font size */
             font-weight: bold;
             color: #fff;
+            cursor: pointer; /* Make the div clickable */
         }
+        .status-container {
+    display: flex;
+    justify-content: space-around; /* Adjust to space out evenly */
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.status {
+    width: 120px; /* Adjusted size for better spacing */
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 1.2rem; /* Adjusted for smaller font size */
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    background-color: #f0e6d6; /* White-gading background */
+}
+
+.status.hadir {
+    color: #3498db; /* Blue text color for "Hadir" */
+}
+
+.status.izin {
+    color: #e74c3c; /* Red text color for "Izin" */
+}
+
+.status.sakit {
+    color: #f39c12; /* Orange text color for "Sakit" */
+}
 
         /* Warna status */
         .hadir {
             background-color: #2ecc71;
-            width: 350px;
-            height: 350px;
         }
 
         .izin {
             background-color: #f1c40f;
-            width: 350px;
-            height: 350px;
         }
 
         .sakit {
             background-color: red;
-            width: 350px;
-            height: 350px;
         }
 
         /* Bagian jadwal */
@@ -166,16 +191,42 @@ $conn->close();
         }
 
         /* Pagination container */
-.pagination {
-    display: flex;
-    justify-content: center;
+        /* Styling for the student data table */
+.student-table {
     margin-top: 20px;
+    width: 100%; /* Full width for the table */
+    border-collapse: collapse; /* Collapse borders for a cleaner look */
 }
 
-/* Pagination links */
+.student-table th, .student-table td {
+    padding: 15px;
+    text-align: center; /* Center align for better readability */
+    border: 1px solid #ddd; /* Light gray border for table cells */
+}
+
+.student-table th {
+    background-color: #2d5d34; /* Dark green background for the header */
+    color: white; /* White text for header */
+    font-weight: bold; /* Bold text for the header */
+}
+
+.student-table tr:nth-child(even) {
+    background-color: #f9f9f9; /* Alternating row colors for better readability */
+}
+
+.student-table tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+}
+
+.student-table td {
+    font-size: 1rem; /* Slightly smaller font size for better fit */
+    color: #333; /* Darker text color for readability */
+}
+
+/* Styling for pagination */
 .pagination a {
     color: #2d5d34; /* Dark green text */
-    padding: 10px 15px;
+    padding: 8px 12px; /* Reduced padding for smaller button size */
     margin: 0 5px;
     text-decoration: none;
     font-weight: bold;
@@ -184,28 +235,24 @@ $conn->close();
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Hover effect for pagination links */
 .pagination a:hover {
     background-color: #2d5d34; /* Dark green background on hover */
     color: #fff; /* White text */
     border-color: #2d5d34;
 }
 
-/* Active page link */
 .pagination a.active {
     background-color: #2d5d34; /* Darker green for active page */
     color: #fff;
     border-color: #2d5d34;
 }
 
-/* Disabled pagination link */
 .pagination a.disabled {
     pointer-events: none;
     color: #999; /* Lighter color for disabled state */
     border-color: #999; /* Lighter border */
     background-color: #f0f0f0; /* Light background */
 }
-
 
     </style>
 </head>
@@ -216,13 +263,22 @@ $conn->close();
 
         <div class="status-container">
             <a href="hadir.php">
-                <div class="status hadir">Hadir</div>
+                <div class="status hadir">
+                    <img src="path_to_image/hadir.png" alt="Hadir" style="width: 80px; height: 80px;">
+                    Hadir
+                </div>
             </a>
             <a href="izin.php">
-                <div class="status izin">Izin</div>
+                <div class="status izin">
+                    <img src="path_to_image/izin.png" alt="Izin" style="width: 80px; height: 80px;">
+                    Izin
+                </div>
             </a>
             <a href="sakit.php">
-                <div class="status sakit">Sakit</div>
+                <div class="status sakit">
+                    <img src="sakit.png" alt="Sakit" style="width: 80px; height: 80px;">
+                    Sakit
+                </div>
             </a>
         </div>
 
@@ -252,19 +308,18 @@ $conn->close();
             </table>
 
             <!-- Pagination links -->
-            <!-- Pagination links -->
-<div class="pagination">
-    <!-- Previous Button -->
-    <a href="?page=<?= $page - 1 ?>" class="<?= $page <= 1 ? 'disabled' : '' ?>">Previous</a>
+            <div class="pagination">
+                <!-- Previous Button -->
+                <a href="?page=<?= $page - 1 ?>" class="<?= $page <= 1 ? 'disabled' : '' ?>">Previous</a>
 
-    <!-- Page Number Links -->
-    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-        <a href="?page=<?= $i ?>" <?= $i === $page ? 'class="active"' : '' ?>><?= $i ?></a>
-    <?php endfor; ?>
+                <!-- Page Number Links -->
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?= $i ?>" <?= $i === $page ? 'class="active"' : '' ?>><?= $i ?></a>
+                <?php endfor; ?>
 
-    <!-- Next Button -->
-    <a href="?page=<?= $page + 1 ?>" class="<?= $page >= $total_pages ? 'disabled' : '' ?>">Next</a>
-</div>
+                <!-- Next Button -->
+                <a href="?page=<?= $page + 1 ?>" class="<?= $page >= $total_pages ? 'disabled' : '' ?>">Next</a>
+            </div>
 
         </div>
     </div>

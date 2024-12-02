@@ -43,49 +43,81 @@ if ($row = $banyak_admin->fetch_assoc()) {
         }
 
         /* Sidebar styling */
-        .sidebar {
-            width: 250px;
-            background-color: #2C3E50;
-            color: #fff;
-            padding: 20px;
-            height: 100vh;
+        .navbar {
             position: fixed;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            top: 1rem;
+            left: 1rem;
+            background: #fff;
+            border-radius: 10px;
+            padding: 1rem 0;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.03);
+            height: calc(100vh - 4rem);
         }
 
-        .sidebar img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin-bottom: 20px;
-        }
-
-        .sidebar h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        .sidebar ul {
+        .navbar__menu {
             list-style: none;
-            width: 100%;
+            padding: 0;
+            margin: 0;
         }
 
-        .sidebar ul li {
-            margin: 15px 0;
+        .navbar__item {
+            position: relative;
         }
 
-        .sidebar ul li a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 18px;
+        .navbar__item:last-child::before {
+            content: '';
+            position: absolute;
+            opacity: 0;
+            z-index: -1;
+            top: 0;
+            left: 1rem;
+            width: 3.5rem;
+            height: 3.5rem;
+            background: #406ff3;
+            border-radius: 17.5px;
+            transition: 250ms cubic-bezier(1, 0.2, 0.1, 1.2) all;
+        }
+
+        .navbar__link {
+            position: relative;
             display: flex;
             align-items: center;
+            justify-content: center;
+            height: 3.5rem;
+            width: 5.5rem;
+            color: #6a778e;
+            transition: 250ms ease all;
         }
 
-        .sidebar ul li a i {
-            margin-right: 10px;
+        .navbar__link span {
+            position: absolute;
+            left: 100%;
+            transform: translate(-3rem);
+            margin-left: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            color: #406ff3;
+            background: #fff;
+            padding: 0.75rem;
+            transition: 250ms ease all;
+            border-radius: 17.5px;
+        }
+
+        .navbar__link:hover {
+            color: #fff;
+        }
+
+        .navbar__link:hover span {
+            opacity: 1;
+            transform: translate(0);
+        }
+
+        .navbar__link:focus,
+        .navbar__link:hover {
+            span {
+                opacity: 1;
+                transform: translate(0);
+            }
         }
 
         /* Main content styling */
@@ -134,15 +166,20 @@ if ($row = $banyak_admin->fetch_assoc()) {
 <body>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <img src="logo.png" alt="Admin">
-        <h2>Admin : <?= htmlspecialchars($admin['nama']); ?></h2>
-        <ul>
-            <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="datasiswa.php"><i class="fas fa-user-check"></i> Data Siswa</a></li>
-            <!-- <li><a href="#"><i class="fas fa-user-cog"></i> Manajemen Admin</a></li> -->
-            <li><a href="riwayat.php"><i class="fas fa-history"></i> Data Absensi</a></li>
-            <li><a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    <div class="navbar">
+        <ul class="navbar__menu">
+            <li class="navbar__item">
+                <a href="admin.php" class="navbar__link"><i class="fas fa-home"></i><span>Home</span></a>
+            </li>
+            <li class="navbar__item">
+                <a href="datasiswa.php" class="navbar__link"><i class="fas fa-user-check"></i><span>Data Siswa</span></a>
+            </li>
+            <li class="navbar__item">
+                <a href="riwayat.php" class="navbar__link"><i class="fas fa-history"></i><span>Customers</span></a>
+            </li>
+            <li class="navbar__item">
+                <a href="#" class="navbar__link"><i class="fas fa-folder"></i><span>Projects</span></a>
+            </li>
         </ul>
     </div>
 

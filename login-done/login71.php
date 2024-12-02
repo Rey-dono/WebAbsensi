@@ -23,8 +23,7 @@ if(isset($_POST['submit'])){
         $_SESSION['role'] = $row['role'];
         $_SESSION['email'] = $row['email'];
 
-        
-        switch($_SESSION['role']){
+  switch($_SESSION['role']){
             case 'admin':
                 header('location: ../admin/admin.php');
                 break;
@@ -42,373 +41,437 @@ if(isset($_POST['submit'])){
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <title>Login Page - SMKN 71 Jakarta</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+:root {
+    --first-color: #12192c;
+    --text-color: #8590ad;
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden; /* Supaya halaman tidak scrollable jika tidak perlu */
-            margin: 0;
-        }
+    --body-font: 'Roboto', sans-serif;
+    --big-font-size: 2rem;
+    --normal-font-size: .938rem;
+    --smaller-font-size: .875rem;
+}
 
-        .container {
-            display: flex;
-            width: 100%;
-            height: 100vh;
-            background-color: #D9D9D9;
-            border-radius: 0; /* Menghapus border-radius untuk tampilan penuh */
-            box-shadow: none; /* Menghapus box-shadow untuk tampilan penuh */
-            overflow: hidden;
-        }
+@media screen and (min-width: 768px) {
+    :root {
+        --big-font-size: 2.5rem;
+        --normal-font-size: 1rem;
+    }
+}
 
-        .illustration {
-            flex: 1;
-            background-color: #666064;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            padding: 40px;
-        }
+*,::before,::after { box-sizing: border-box; }
 
-        .illustration img {
-            width: 100%;
-            height: auto;
-            max-width: 600px; /* Menambah lebar maksimal ilustrasi */
-        }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--body-font);
+    color: var(--first-color);
+}
 
-        .illustration-text {
-            position: absolute;
-            top: 40px;
-            left: 40px;
-            font-size: 24px;
-            font-weight: 600;
-            color: white;
-        }
+h1 { margin: 0; }
+a { text-decoration: none; }
+img { max-width: 100%; height: auto; }
 
-        .login-form {
-            flex: 1;
-            padding: 60px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+.l-form {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
 
-        .form-container {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+.shape1, .shape2 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
 
-        .logo-box {
-            margin-bottom: 30px;
-        }
+    .shape1 { 
+        top: -7rem;
+        left: -3.5rem;
+        background: linear-gradient(180deg, var(--first-color) 0%, rgba(196, 196, 196, 0) 100%);
+    }
 
-        .logo-box img {
-            width: 180px;
-            height: auto;
-        }
+    .shape2 {
+        bottom: -6rem;
+        right: -5.5rem;
+        background: linear-gradient(180deg, var(--first-color) 0%, rgba(196, 196, 196, 0) 100%);
+        transform: rotate(180deg);
+    }
 
-        .input-group {
-            position: relative;
-            margin-bottom: 25px;
-            width: 100%;
-        }
+.form {
+    height: 100vh;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+}
 
-        .input-group img {
-            position: absolute;
-            top: 50%;
-            left: 20px;
-            width: 24px;
-            height: auto;
-            transform: translateY(-50%);
-        }
+.form-content { width: 290px; }
+.form-img { display: none; }
 
-        .input-group input {
-            width: 100%;
-            padding: 15px 20px 15px 60px; /* Tambahkan padding untuk ikon */
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 30px;
-            outline: none;
-            background-color: #f9f9f9;
-            transition: border-color 0.3s;
-        }
+.form-title {
+    font-size: var(--big-font-size);
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
 
-        .input-group input:focus {
-            border-color: #007bff;
-            background-color: #fff;
-        }
+.form-div {
+    position: relative;
+    display: grid;
+    grid-template-columns: 7% 93%;
+    margin-bottom: 1rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid var(--text-color);
+}
 
-        .options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            width: 100%;
-        }
+    .form-div.focus { border-bottom: 1px solid var(--first-color); }
 
-        .options label {
-            font-size: 14px;
-            color: #333;
-            display: flex;
-            align-items: center;
-        }
+.form-div-one { margin-bottom: 3rem; }
+.form-icon { 
+    font-size: 1.5rem; 
+    color: var(--text-color);
+    transition: .3s; 
+}
 
-        .options label input {
-            margin-right: 8px;
-        }
+    .form-div.focus .form-icon { color: var(--first-color); }
 
-        .options a {
-            font-size: 14px;
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
+.form-label {
+    display: block;
+    position: absolute;
+    left: 0.75rem;
+    top: 0.25rem;
+    font-size: var(--normal-font-size);
+    color: var(--text-color);
+    transition: .3s;
+}
 
-        .options a:hover {
-            color: #0056b3;
-        }
+    .form-div.focus .form-label {
+        top: -1.5rem;
+        font-size: .875rem;
+        color: var(--first-color);
+    }
 
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            margin-bottom: 20px;
-        }
+.form-div-input { position: relative; }
 
-        .login-btn {
-            width: 48%;
-            padding: 12px;
-            border: none;
-            background-color: #72ADF0;
-            color: white;
-            font-size: 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+.form-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: none;
+    padding: 0.5rem .75rem;
+    font-size: 1.2rem;
+    color: var(--first-color);
+    transition: .3s;
+}
 
-        .login-btn:hover {
-            background-color: #5e9dd9;
-        }
+.form-forgot {
+    display: block;
+    text-align: right;
+    margin-bottom: 2rem;
+    font-size: var(--normal-font-size);
+    color: var(--text-color);
+    font-weight: 500;
+    transition: .5s;
+}
 
-        .signup-btn {
-            width: 48%;
-            padding: 12px;
-            background-color: #D9D9D9;
-            color: #007bff;
-            border: 1px solid #ddd;
-            text-align: center;
-            font-size: 16px;
-            border-radius: 30px;
-            text-decoration: none;
-            display: inline-block;
-            transition: background-color 0.3s, color 0.3s;
-        }
+    .form-forgot:hover { color: var(--first-color); }
 
-        .signup-btn:hover {
-            background-color: #c3c3c3;
-            color: #6c9edc;
-        }
+.form-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: var(--normal-font-size);
+    outline: none;
+    border: none;
+    margin-bottom: 3rem;
+    background-color: var(--first-color);
+    color: #fff;
+    border-radius: .5rem;
+    cursor: pointer;
+    transition: .3s;
+}
 
-        .register-link {
-            font-size: 14px;
-            text-align: center;
-            width: 100%;
-        }
+    .form-button:hover { box-shadow: 0px 15px 36px rgba(0, 0, 0, .15); }
 
-        .register-link a {
-            color: #007bff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
+.form-social { text-align: center; }
 
-        .register-link a:hover {
-            color: #0056b3;
-        }
+.form-social-text {
+    display: block;
+    font-size: var(--normal-font-size);
+    margin-bottom: 1rem;
+}
 
-        /* Responsif untuk layar lebih kecil */
-        @media (max-width: 1024px) {
-            .container {
-                flex-direction: column;
-                height: auto;
-            }
+.form-social-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    margin-right: 1rem;
+    padding: 0.5rem;
+    background-color: var(--text-color);
+    color: #fff;
+    font-size: 1.25rem;
+    border-radius: 50%;
+    transition: .5s;
+}
 
-            .illustration, .login-form {
-                flex: none;
-                width: 100%;
-                padding: 20px;
-            }
+    .form-social-icon:hover { background-color: var(--first-color); }
 
-            .illustration img {
-                max-width: 400px;
-            }
+@media screen and (min-width: 968px) {
+    .shape1 { 
+        width: 400px;
+        height: 400px;
+        top: -11rem;
+        left: -6.5rem;
+    }
 
-            .illustration-text {
-                font-size: 20px;
-                top: 20px;
-                left: 20px;
-            }
+    .shape2 {
+        width: 300px;
+        height: 300px;
+        right: -6.5rem;
+    }
 
-            .form-container {
-                max-width: 400px;
-                padding: 30px;
-            }
+    .form {
+        grid-template-columns: 1.5fr 1fr;
+        padding: 0 2rem;
+    }
 
-            .logo-box img {
-                width: 150px;
-            }
+    .form-content { width: 320px; }
+    .form-img { 
+        display: block;
+        width: 700px;
+        justify-self: center; 
+    }
+}
+    
+      
+            :root {
+    --first-color: #12192c;
+    --text-color: #8590ad;
 
-            .input-group img {
-                left: 15px;
-                width: 20px;
-            }
+    --body-font: 'Roboto', sans-serif;
+    --big-font-size: 2rem;
+    --normal-font-size: .938rem;
+    --smaller-font-size: .875rem;
+}
 
-            .input-group input {
-                padding: 12px 15px 12px 50px;
-                font-size: 14px;
-            }
+@media screen and (min-width: 768px) {
+    :root {
+        --big-font-size: 2.5rem;
+        --normal-font-size: 1rem;
+    }
+}
 
-            .options {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+*,::before,::after { box-sizing: border-box; }
 
-            .options a {
-                margin-left: 0;
-                margin-top: 10px;
-            }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--body-font);
+    color: var(--first-color);
+}
 
-            .buttons {
-                flex-direction: column;
-            }
+h1 { margin: 0; }
+a { text-decoration: none; }
+img { max-width: 100%; height: auto; }
 
-            .login-btn, .signup-btn {
-                width: 100%;
-                margin: 5px 0;
-            }
+.l-form {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
 
-            .register-link {
-                font-size: 13px;
-            }
-        }
+.shape1, .shape2 {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
 
-        @media (max-width: 768px) {
-            .illustration img {
-                max-width: 300px;
-            }
+    .shape1 { 
+        top: -7rem;
+        left: -3.5rem;
+        background: linear-gradient(180deg, var(--first-color) 0%, rgba(196, 196, 196, 0) 100%);
+    }
 
-            .illustration-text {
-                font-size: 18px;
-            }
+    .shape2 {
+        bottom: -6rem;
+        right: -5.5rem;
+        background: linear-gradient(180deg, var(--first-color) 0%, rgba(196, 196, 196, 0) 100%);
+        transform: rotate(180deg);
+    }
 
-            .form-container {
-                padding: 20px;
-            }
+.form {
+    height: 100vh;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+}
 
-            .logo-box img {
-                width: 130px;
-            }
+.form-content { width: 290px; }
+.form-img { display: none; }
 
-            .input-group img {
-                left: 10px;
-                width: 18px;
-            }
+.form-title {
+    font-size: var(--big-font-size);
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
 
-            .input-group input {
-                padding: 10px 10px 10px 40px;
-                font-size: 13px;
-            }
+.form-div {
+    margin-bottom: 1rem; /* Jarak antar elemen */
+}
+.form-input {
+    width: 100%; /* Lebar penuh */
+    padding: 20px; /* Ruang dalam */
+    font-size: 14px; /* Ukuran teks */
+    border: 20px ; /* Garis luar */
+    border-radius: 3px; /* Sedikit sudut melengkung */
+    outline: none; /* Hilangkan garis fokus bawaan */
+    box-sizing: border-box; /* Padding dihitung dalam ukuran elemen */
+}
 
-            .options label {
-                font-size: 12px;
-            }
+.form-input:focus {
+    border-color: #666; /* Warna garis luar saat fokus */
+}
+.form-forgot {
+    display: block;
+    text-align: right;
+    margin-bottom: 2rem;
+    font-size: var(--normal-font-size);
+    color: var(--text-color);
+    font-weight: 500;
+    transition: .5s;
+}
 
-            .options a {
-                font-size: 12px;
-            }
+    .form-forgot:hover { color: var(--first-color); }
 
-            .buttons {
-                flex-direction: column;
-            }
+.submit {
+    width: 100%;
+    padding: 1rem;
+    font-size: var(--normal-font-size);
+    outline: none;
+    border: none;
+    margin-bottom: 3rem;
+    background-color: var(--first-color);
+    color: #fff;
+    border-radius: .5rem;
+    cursor: pointer;
+    transition: .3s;
+}
 
-            .login-btn, .signup-btn {
-                width: 100%;
-                margin: 5px 0;
-                font-size: 14px;
-            }
+    .submit:hover { box-shadow: 0px 15px 36px rgba(0, 0, 0, .15); }
 
-            .register-link {
-                font-size: 12px;
-            }
-        }
+.form-social { text-align: center; }
+
+.form-social-text {
+    display: block;
+    font-size: var(--normal-font-size);
+    margin-bottom: 1rem;
+}
+
+.form-social-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    margin-right: 1rem;
+    padding: 0.5rem;
+    background-color: var(--text-color);
+    color: #fff;
+    font-size: 1.25rem;
+    border-radius: 50%;
+    transition: .5s;
+}
+
+    .form-social-icon:hover { background-color: var(--first-color); }
+
+@media screen and (min-width: 968px) {
+    .shape1 { 
+        width: 400px;
+        height: 400px;
+        top: -11rem;
+        left: -6.5rem;
+    }
+
+    .shape2 {
+        width: 300px;
+        height: 300px;
+        right: -6.5rem;
+    }
+
+    .form {
+        grid-template-columns: 1.5fr 1fr;
+        padding: 0 2rem;
+    }
+
+    .form-content { width: 320px; }
+    .form-img { 
+        display: block;
+        width: 700px;
+        justify-self: center; 
+    }
+}
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- Bagian Kiri dengan Ilustrasi dan Tulisan SMKN 71 -->
-        <div class="illustration">
-            <div class="illustration-text">SMKN 71 JAKARTA</div>
-            <img src="login.jpeg" alt="Illustration of person working on computer">
-        </div>
+    <div class="l-form">
+        <div class="shape1"></div>
+        <div class="shape2"></div>
+        <div class="form">
+            <img src="login.png" alt="image" class="form-img">
 
-        <!-- Bagian Kanan dengan Form Login dan Logo -->
-        <div class="login-form">
-            <!-- Kotak Putih yang menyatukan logo dan form -->
-            <div class="form-container">
-                <!-- Logo -->
-                <div class="logo-box">
-                    <img src="logo.png" alt="SMKN 71 Logo">
-                </div>
-
-                <!-- Form Login -->
-                <form method="POST" class="action">
-                    <div class="input-group">
-                        <img src="email.jpeg" alt="Email Icon"> <!-- Gambar ikon email -->
-                        <input type="email" name="email" placeholder="Enter Email" required>
+                <form method="POST" action="#" class="form-content">
+                    
+           
+                <h1 class="form-title">Welcome</h1>
+                    <div class="form-div">
+                        <input type="email" name="email" placeholder="Enter Email" class="form-input" required>
                     </div>
-                    <div class="input-group">
-                        <img src="kunci.jpeg" alt="Lock Icon"> <!-- Gambar ikon gembok -->
-                        <input type="password" name="password" placeholder="Enter Password" required>
+                    <div class="form-div">
+                        <input type="password" name="password" placeholder="Enter Password" class="form-input" required>
                     </div>
-                    <div class="options">
-                        <label for="remember-me">
-                            <input type="checkbox" id="remember-me"> Remember me
-                        </label>
-                        <a href="../forgot-pass-done/forgot.php">Forgot Password?</a>
-                    </div>
-                    <div class="buttons">
-                        <button type="submit" name="submit" class="login-btn">LOGIN</button>                        
-                    </div>                    
-                </form>
+                    <input type="submit" name="submit" value="Login" class="form-button">
+              
+               
             </div>
         </div>
-    </div>
-</body>
+        </form>
 
+<script>
+const inputs = document.querySelectorAll(".form-input");
+
+function addfocus() {
+    let parent = this.parentNode.parentNode;
+    parent.classList.add("focus");
+}
+
+function remfocus() {
+    let parent = this.parentNode.parentNode;
+    if(this.value == ""){
+        parent.classList.remove("focus");
+    }
+}
+
+inputs.forEach(input => {
+    input.addEventListener("focus", addfocus);
+    input.addEventListener("blur", remfocus)
+});
+</script>
+</body>
 </html>

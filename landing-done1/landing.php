@@ -47,6 +47,9 @@ body, html {
     width: 100%;
     height: 100%;
     object-fit: cover; /* Membuat gambar memenuhi seluruh kotak */
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0)), 
+                url('apa1.png'); /* Tambahkan gradient di atas gambar */
+  
 }
 
 .contact-us {
@@ -79,7 +82,7 @@ body, html {
 /* Right Section */
 .right-section {
     width: 40%;
-    background-color:#7b68ee ;
+    background-color:#f0f0f0 ;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -191,7 +194,7 @@ h3 {
 
     <div class="container">
         <div class="left-section">
-            <img src="apa.jpg" alt="School Building" class="background-image">
+            <img src="apa1.png" alt="School Building" class="background-image">
             <div class="contact-us">
                 <p>Contact Us</p>
                 <div class="icons">

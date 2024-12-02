@@ -75,8 +75,6 @@ function upload()
     }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
