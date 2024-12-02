@@ -85,92 +85,126 @@ function upload()
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presensi Kehadiran Izin</title>
     <style>
-        /* General styling */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #5a4f4f;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    /* General Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif; /* Modern font */
+        text-decoration: none;
+    }
 
-        /* Container for the form and footer info */
-        .container {
-            background-color: #f8f4f4;
-            width: 1600px;
-            height: 800px;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+    /* Background and body styling */
+    body {
+        background: linear-gradient(135deg, #1e3c72, #2a5298); /* Gradient background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: #fff;
+        font-size: 1rem;
+    }
 
-        /* Form styling */
-        .form-container {
-            margin-top: 20px;
-        }
+    /* Main container with blur effect */
+    .container {
+        background: rgba(255, 255, 255, 0.1); /* Transparent background */
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        width: 90%;
+        max-width: 800px;
+        backdrop-filter: blur(10px); /* Cool blur effect */
+        border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+    }
 
-        .input-group {
-            display: flex;
-            align-items: center;
-            background-color: #d3d3d3;
-            border-radius: 25px;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
+    /* Title with glowing effect */
+    h2 {
+        color: #f39c12;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        font-size: 2.5rem;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        margin-bottom: 30px;
+    }
 
-        .input-group .icon {
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
+    /* Form styling */
+    .form-container {
+        margin-top: 20px;
+    }
 
-        .input-group input {
-            border: none;
-            background: none;
-            flex: 1;
-            outline: none;
-            font-size: 1rem;
-        }
+    .input-group {
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.2); /* Semi-transparent input background */
+        border-radius: 25px;
+        padding: 15px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Input box shadow */
+    }
 
-        /* Small note under input field */
-        .note {
-            color: red;
-            font-size: 0.8rem;
-            margin-bottom: 20px;
-        }
+    .input-group .icon {
+        margin-right: 15px;
+        font-size: 1.5rem;
+        color: #f39c12; /* Icon color */
+    }
 
-        /* Submit button styling */
-        .submit-btn {
-            background-color: #82aef5;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+    .input-group input {
+        border: none;
+        background: none;
+        flex: 1;
+        outline: none;
+        font-size: 1.1rem;
+        color: #fff; /* White input text */
+    }
 
-        .submit-btn:hover {
-            background-color: #5a8ed1;
-        }
+    /* Small note for mandatory input */
+    .note {
+        color: #f39c12;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
 
-        /* Footer info styling */
-        .footer-info {
-            margin-top: 600px;
-            background-color: #72b4fc;
-            padding: 15px;
-            border-radius: 10px;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+    /* Submit button styling */
+    .submit-btn {
+        background: linear-gradient(45deg, #f39c12, #e67e22); /* Gradient button */
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 15px 30px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
 
-        .footer-info p {
-            margin: 5px 0;
-        }
-    </style>
+    .submit-btn:hover {
+        transform: scale(1.1); /* Slight scaling on hover */
+        background: linear-gradient(45deg, #e67e22, #d35400); /* Darker gradient on hover */
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Footer info styling */
+    .footer-info {
+        margin-top: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        color: #fff;
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .footer-info p {
+        margin: 5px 0;
+    }
+</style>
+
 </head>
 
 <body>
@@ -181,7 +215,7 @@ function upload()
                 <span class="icon">✉️</span>
                 <input type="file" placeholder="Enter Reason" name="surat">
             </div>
-            <small class="note">*wajib diisi bila sakit</small>
+            <small class="note">*wajib diisi bila izin</small>
             <button name="submit" type="submit" class="submit-btn">SUBMIT</button>
         </form>
         <div class="footer-info">

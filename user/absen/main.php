@@ -56,154 +56,157 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presensi Kehadiran</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-            text-decoration: none;
-        }
+    <style>* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif; /* Modern font */
+    text-decoration: none;
+}
 
-        /* Latar belakang halaman */
-        body {
-            background-color: #6c6666;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+/* Background for the entire page */
+body {
+    background: linear-gradient(135deg, #1e3c72, #2a5298); /* Gradient background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    font-size: 1rem;
+}
 
-        /* Container utama */
-        .container {
-            margin-top: 100px;
-            background-color: #f9f9f9;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            width: 80%; /* Adjusted for better responsiveness */
-            max-width: 1200px; /* Maximum width */
-        }
+/* Main container with a cool shadow effect */
+.container {
+    background: rgba(255, 255, 255, 0.1); /* Transparent background */
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 80%;
+    max-width: 1200px;
+    backdrop-filter: blur(10px); /* Cool blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+}
 
-        /* Judul */
-        h1 {
-            margin-bottom: 20px;
-            color: #000;
-        }
+/* Title with a glowing effect */
+h1 {
+    margin-bottom: 20px;
+    color: #f39c12;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    font-size: 3rem;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+}
 
-        /* Kotak status */
-        .status-container {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 30px;
-            margin-top: 20px;
-        }
+/* Status container with a hover scale effect */
+.status-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
 
-        .status {
-            width: 100px;
-            height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 10px;
-            background-color: #e0e0e0;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #fff;
-        }
+.status {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-        /* Warna status */
-        .hadir {
-            background-color: #2ecc71;
-            width: 350px;
-            height: 350px;
-        }
+/* Hover effect for status buttons */
+.status:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
 
-        .izin {
-            background-color: #f1c40f;
-            width: 350px;
-            height: 350px;
-        }
+/* Unique colors for each status */
+.hadir {
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+}
 
-        .sakit {
-            background-color: red;
-            width: 350px;
-            height: 350px;
-        }
+.izin {
+    background: linear-gradient(45deg, #f1c40f, #f39c12);
+}
 
-        /* Bagian jadwal */
-        .schedule {
-            background-color: #7abaff;
-            display: inline-block;
-            margin: auto;
-            padding: 10px;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 2rem;
-            width: 100%; /* Make the table responsive */
-        }
+.sakit {
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+}
 
-        .schedule table {
-            border-collapse: collapse;
-            width: 100%; /* Full width for the table */
-        }
+/* Table styling */
+.schedule {
+    background-color: #3498db;
+    display: inline-block;
+    padding: 20px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1.5rem;
+    width: 100%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
 
-        .schedule th, .schedule td {
-            border: 1px solid gray; /* Border for the cells */
-            padding: 20px;
-            text-align: center; /* Center align for better readability */
-        }
+.schedule table {
+    border-collapse: collapse;
+    width: 100%;
+}
 
-        /* Styles for the student data table */
-        .student-table {
-            margin-top: 20px;
-            width: 100%; /* Full width for the table */
-        }
+.schedule th, .schedule td {
+    border: 1px solid #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
 
-        .student-table th {
-            background-color: darkgreen; /* Light gray background for header */
-        }
+/* Hover effect for table rows */
+.schedule tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
 
-        /* Pagination container */
+/* Pagination container */
 .pagination {
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
 
-/* Pagination links */
 .pagination a {
-    color: #2d5d34; /* Dark green text */
-    padding: 10px 15px;
+    color: #fff;
+    padding: 12px 20px;
     margin: 0 5px;
     text-decoration: none;
     font-weight: bold;
-    border: 1px solid #2d5d34; /* Dark green border */
-    border-radius: 5px;
+    border: 2px solid #fff;
+    border-radius: 10px;
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* Hover effect for pagination links */
+/* Pagination link hover and active states */
 .pagination a:hover {
-    background-color: #2d5d34; /* Dark green background on hover */
-    color: #fff; /* White text */
-    border-color: #2d5d34;
+    background-color: #f39c12;
+    color: #fff;
+    border-color: #f39c12;
 }
 
-/* Active page link */
 .pagination a.active {
-    background-color: #2d5d34; /* Darker green for active page */
+    background-color: #27ae60;
     color: #fff;
-    border-color: #2d5d34;
+    border-color: #27ae60;
 }
 
 /* Disabled pagination link */
 .pagination a.disabled {
     pointer-events: none;
-    color: #999; /* Lighter color for disabled state */
-    border-color: #999; /* Lighter border */
-    background-color: #f0f0f0; /* Light background */
+    color: #7f8c8d;
+    background-color: #95a5a6;
+    border-color: #95a5a6;
 }
 
 

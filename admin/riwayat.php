@@ -25,40 +25,51 @@ if ($row = $banyak_admin->fetch_assoc()) {
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-         /* Base styling */
-         * {
+       /* Base styling */
+       * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
         }
 
-        body {
+body {
+            background: linear-gradient(135deg, #a0c4ff, #f6e1a4);
+            background-attachment: fixed;
             display: flex;
-            background-color: #f4f4f9;
             color: #333;
+            min-height: 100vh;
+            line-height: 1.6;
         }
 
-        /* Sidebar styling */
-        .sidebar {
-            width: 250px;
-            background-color: #2C3E50;
-            color: #fff;
-            padding: 20px;
+/* Sidebar styling */
+.sidebar {
+            width: 280px;
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 40px 20px;
             height: 100vh;
             position: fixed;
+            top: 0;
+            left: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            border-radius: 0 10px 10px 0;
         }
+
 
         .sidebar img {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            object-fit: cover;
+            border: 4px solid #3498db;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
-
         .sidebar h2 {
             font-size: 20px;
             margin-bottom: 20px;
@@ -85,16 +96,15 @@ if ($row = $banyak_admin->fetch_assoc()) {
             margin-right: 10px;
         }
 
-        /* Main content styling */
-        .main-content {
-            margin-left: 250px;
+/* Main content styling */
+.main-content {
+            margin-left: 280px;
             padding: 20px;
-            width: calc(100% - 250px);
+            width: calc(100% - 280px);
             display: flex;
-            flex-direction: column; /* Stack the header vertically */
-            gap: 20px; /* Add spacing between elements */
+            flex-direction: column;
+            gap: 20px;
         }
-
         .header {
             background-color: #2980B9;
             color: #fff;
@@ -103,19 +113,20 @@ if ($row = $banyak_admin->fetch_assoc()) {
             text-align: center;
         }
 
-        /* Flex container for table and form */
-        .content-wrapper {
+/* Flex container for table and form */
+
+.content-wrapper {
             display: flex;
-            gap: 20px; /* Space between table and form */
+            gap: 20px;
         }
 
-        /* Table container styling */
-        .table-container {
+/* Table container styling */
+.table-container {
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            flex: 1; /* Allow the table to take available space */
+            flex: 1;
         }
 
         .table-container h2 {
@@ -129,88 +140,129 @@ if ($row = $banyak_admin->fetch_assoc()) {
             width: 100%;
             border-collapse: collapse;
         }
+.data-table th, .data-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
 
-        .data-table th, .data-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
+.data-table th {
+    background-color: #3498DB;
+    color: #fff;
+}
 
-        .data-table th {
-            background-color: #3498DB;
-            color: #fff;
-        }
+/* Form container styling */
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+}
 
-        /* Form container styling */
-        .form-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 300px;
-        }
+.form-container h2 {
+    font-size: 24px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
 
-        .form-container h2 {
-            font-size: 24px;
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+.form-group {
+    margin-bottom: 15px;
+}
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+/* Style untuk tombol Generate PDF */
+.generate-pdf-btn {
+    background-color: #28a745; /* Warna hijau untuk tombol */
+    color: #fff;
+    padding: 10px 20px;
+    width: auto;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
 
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+/* Hover effect untuk tombol Generate PDF */
+.generate-pdf-btn:hover {
+    background-color: #218838; /* Warna hijau yang lebih gelap saat hover */
+}
 
-        .submit-btn {
-            background-color: #2980B9;
-            color: #fff;
-            padding: 10px;
-            width: 100%;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+/* Tombol saat dalam keadaan disabled (misalnya, jika data belum dipilih) */
+.generate-pdf-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
 
-        .submit-btn:hover {
-            background-color: #3498DB;
-        }
-        .edit-btn, .delete-btn {
-        color: #2980B9;
-        margin-right: 10px;
-        text-decoration: none;
-    }
+/* Tombol saat fokus */
+.generate-pdf-btn:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5); /* Warna hijau terang saat fokus */
+}
 
-    .edit-btn:hover {
-        color: #3498DB;
-    }
 
-    .delete-btn {
-        color: #e74c3c;
-    }
+/* Submit button */
+.submit-btn {
+    background-color: #2980B9;
+    color: #fff;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
 
-    .delete-btn:hover {
-        color: #c0392b;
-    }
-    /* Style the select dropdown */
+.submit-btn:hover {
+    background-color: #3498DB;
+}
+
+/* Edit and delete button styling */
+.edit-btn, .delete-btn {
+    color: #2980B9;
+    margin-right: 10px;
+    text-decoration: none;
+}
+
+.edit-btn:hover {
+    color: #3498DB;
+}
+
+.delete-btn {
+    color: #e74c3c;
+}
+
+.delete-btn:hover {
+    color: #c0392b;
+}
+
+/* Style the select dropdown */
 #kelas-select, 
 #kelas {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     margin-bottom: 20px;
@@ -218,6 +270,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
     color: #333;
     font-size: 16px;
     cursor: pointer;
+    transition: border-color 0.3s ease;
 }
 
 /* Add custom dropdown arrow */
@@ -231,7 +284,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
     color: #2980B9;
 }
 
-/* Style individual options in select (limited) */
+/* Style individual options in select */
 #kelas-select option,
 #kelas option {
     background-color: #f4f4f9;
@@ -239,76 +292,50 @@ if ($row = $banyak_admin->fetch_assoc()) {
     padding: 8px;
 }
 
+/* Style submit select button */
 #submit-select, 
 #submit {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    margin-bottom: 20px;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: #2980B9;
+    color: #fff;
     font-size: 16px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* Add custom dropdown arrow */
-#submit-select::after, 
-#submit::after {
-    content: "▼";
+/* Hover effect for the submit button */
+#submit-select:hover, 
+#submit:hover {
+    background-color: #3498DB;
+}
+
+/* Password container styling */
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.password-container .toggle-password {
     position: absolute;
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    color: #2980B9;
+    cursor: pointer;
+    color: #555;
 }
 
-/* Style individual options in select (limited) */
-#submit-select option,
-#submit option {
-    background-color: #f4f4f9;
-    color: #333;
-    padding: 8px;
-}
-.password-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .password-container input {
-            width: 100%;
-            padding-right: 40px;
-        }
-
-        .password-container .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #555;
-        }
-        .password-container {
-            position: relative;
-            width: 100%;
-        }
-
-        .password-container input {
-            width: 100%;
-            padding-right: 40px;
-        }
-
-        .password-container .toggle-password {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #555;
-        }
-        #date-input {
+/* Date input styling */
+#date-input {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #f9f9f9;
@@ -323,6 +350,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
     opacity: 0.6;
     cursor: pointer;
 }
+
 #date-input:focus {
     outline: none;
     border-color: #2980B9;
@@ -401,7 +429,8 @@ if ($row = $banyak_admin->fetch_assoc()) {
                 <form id="generate-pdf-form" action="pdf.php" method="post" target="_blank">
     <input type="hidden" name="kelas" id="hidden-kelas">
     <input type="hidden" name="date" id="hidden-date">
-    <button type="button" id="generate-pdf-btn" class="btn btn-primary">Generate PDF</button>
+    <button id="generate-pdf-btn"  class="generate-pdf-btn">Generate PDF</button>
+
 </form>
 
 

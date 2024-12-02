@@ -27,7 +27,6 @@ if (!$siswa) {
 
 // Handle the form submission
 // Handle the form submission
-// Handle the form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nama = $_POST['nama'];
     $kelas = $_POST['kelas'];
@@ -69,7 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-
 function upload()
 {
     $namaFile = $_FILES['surat_baru']['name'];
@@ -88,7 +86,7 @@ function upload()
     if ($ukuranFile > 1000000) {
         echo "<script>
                 alert('Ukuran gambar terlalu besar!');
-                window.location.href='edit-riwayat.php';
+                window.location.href='izin.php';
               </script>";
         return false;
     }
