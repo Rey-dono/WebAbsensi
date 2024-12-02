@@ -184,7 +184,6 @@ $conn->close();
             </form>
         </div>
     </div>
-    <p class="school-name">SMKN 71 JAKARTA</p>
 </body>
 </html>
 

@@ -239,8 +239,8 @@ if ($row = $banyak_admin->fetch_assoc()) {
     padding: 8px;
 }
 
-#submit-select, 
-#submit {
+.submit-select, 
+.submit {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
@@ -253,8 +253,8 @@ if ($row = $banyak_admin->fetch_assoc()) {
 }
 
 /* Add custom dropdown arrow */
-#submit-select::after, 
-#submit::after {
+.submit-select::after, 
+.submit::after {
     content: "▼";
     position: absolute;
     right: 10px;
@@ -264,8 +264,8 @@ if ($row = $banyak_admin->fetch_assoc()) {
 }
 
 /* Style individual options in select (limited) */
-#submit-select option,
-#submit option {
+.submit-select option,
+.submit option {
     background-color: #f4f4f9;
     color: #333;
     padding: 8px;
@@ -375,7 +375,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
                 </select>
                 <input id="date-input" name="date" type="date">
                 <!-- <input type="submit" name="submit" id="submit"> -->
-                <button type="submit" name="submit" id="submit">Submit</button>
+                <button type="submit" name="submit" class="submit">Submit</button>
 
                 
 
@@ -401,7 +401,7 @@ if ($row = $banyak_admin->fetch_assoc()) {
                 <form id="generate-pdf-form" action="pdf.php" method="post" target="_blank">
     <input type="hidden" name="kelas" id="hidden-kelas">
     <input type="hidden" name="date" id="hidden-date">
-    <button type="button" id="submit">Generate PDF</button>
+    <button type="button" id="generate-pdf-btn" class="submit">Generate PDF</button>
 </form>
 
 
