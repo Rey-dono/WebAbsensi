@@ -208,7 +208,7 @@ h1 {
     background-color: #95a5a6;
     border-color: #95a5a6;
 }
-+
+
 
     </style>
 </head>
